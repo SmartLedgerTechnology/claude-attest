@@ -93,3 +93,19 @@ test("genuinely broken integrity still reads as unverified", () => {
   assert.equal(e.name, "Unverified");
   assert.match(e.summary, /did not pass/);
 });
+
+test("a broadcast-but-unmined anchor reads as pending, not unanchored", () => {
+  const pending = { certificate: { anchor: { txid: "abc123", network: "bsv-mainnet", blockHeight: null } } };
+  const e = evidenceLevel(pending, allPass, []);
+  assert.equal(e.level, 0);
+  assert.equal(e.name, "Anchor Pending", "broadcast is not the same as absent");
+  assert.match(e.nextLevelRequires, /mined/);
+  assert.match(e.blockedBy, /not been mined/);
+});
+
+test("no anchor at all is distinct from a pending one", () => {
+  const none = { certificate: { anchor: { txid: null, network: "mock", blockHeight: null } } };
+  const e = evidenceLevel(none, allPass, []);
+  assert.equal(e.name, "Locally Verified");
+  assert.match(e.blockedBy, /no anchor has been submitted/);
+});

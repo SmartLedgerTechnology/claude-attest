@@ -27,6 +27,10 @@ export const EVIDENCE_LEVELS = {
     name: "Locally Verified",
     summary: "Sound and tamper-evident, but not yet anchored to a public chain.",
   },
+  "0-pending": {
+    name: "Anchor Pending",
+    summary: "Anchored and broadcast; awaiting confirmation in a block.",
+  },
   1: {
     name: "Self Attested",
     summary: "Creator-controlled capture, cryptographically sealed and independently timestamped.",
@@ -62,9 +66,12 @@ export function evidenceLevel(attestation, checks, verifiedCountersignatures = [
   const structureIntact = integrity && checks.transcriptChain !== false;
   const signed = checks.signature === true && checks.anchorBinding === true;
   const timestamped = attestation.certificate?.anchor?.blockHeight != null;
+  // Broadcast but unmined is a real, meaningful intermediate state: the digest
+  // is public and irreversible, it simply has no block height yet.
+  const broadcast = !!attestation.certificate?.anchor?.txid;
 
   if (!structureIntact || !signed) {
-    return report(0, { integrity: structureIntact, signed, timestamped }, verifiedCountersignatures);
+    return report(0, { integrity: structureIntact, signed, timestamped, broadcast }, verifiedCountersignatures);
   }
 
   // An anchor still in the mempool is a pending timestamp, not an independent
@@ -72,31 +79,34 @@ export function evidenceLevel(attestation, checks, verifiedCountersignatures = [
   if (!timestamped) {
     return report(
       0,
-      { integrity: true, signed: true, timestamped: false },
+      { integrity: true, signed: true, timestamped: false, broadcast },
       verifiedCountersignatures,
-      "the anchoring transaction has not been mined yet"
+      broadcast ? "the anchoring transaction has not been mined yet" : "no anchor has been submitted"
     );
   }
 
   const roles = new Set(verifiedCountersignatures.map((c) => c.role));
   if (roles.has(COUNTERSIGNATURE_ROLES.WITNESS)) {
-    return report(3, { integrity: true, signed: true, timestamped: true }, verifiedCountersignatures);
+    return report(3, { integrity: true, signed: true, timestamped: true, broadcast }, verifiedCountersignatures);
   }
   if (roles.has(COUNTERSIGNATURE_ROLES.PLATFORM)) {
-    return report(2, { integrity: true, signed: true, timestamped: true }, verifiedCountersignatures);
+    return report(2, { integrity: true, signed: true, timestamped: true, broadcast }, verifiedCountersignatures);
   }
-  return report(1, { integrity: true, signed: true, timestamped: true }, verifiedCountersignatures);
+  return report(1, { integrity: true, signed: true, timestamped: true, broadcast }, verifiedCountersignatures);
 }
 
 function report(level, criteria, countersignatures, blockedBy) {
   // Integrity intact but no public timestamp is the free tier working exactly
   // as designed — say so, rather than implying something is broken.
   const soundButUnanchored = level === 0 && criteria.integrity && criteria.signed && !criteria.timestamped;
-  const descriptor = EVIDENCE_LEVELS[soundButUnanchored ? "0-unanchored" : level];
+  const key = soundButUnanchored ? (criteria.broadcast ? "0-pending" : "0-unanchored") : level;
+  const descriptor = EVIDENCE_LEVELS[key];
 
   const next = {
     0: soundButUnanchored
-      ? "anchoring this attestation to a public chain"
+      ? criteria.broadcast
+        ? "the anchoring transaction to be mined (usually minutes)"
+        : "anchoring this attestation to a public chain"
       : "pass the integrity, signature and timestamp checks",
     1: "a countersignature from the capture platform (role: platform)",
     2: "a countersignature from an independent witness (role: witness)",

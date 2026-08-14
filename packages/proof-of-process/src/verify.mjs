@@ -137,7 +137,15 @@ export async function verifyAttestation(attestation, opts = {}) {
     // attestation has no on-chain claim to disprove, and reporting that as a
     // FAILED check tells a free-tier user their sound, tamper-evident record is
     // broken when it is not.
-    const anchoredOnChain = certificate.anchor.network !== "mock" && !!certificate.anchor.txid;
+    // Three distinct states, and only the third can be checked against a chain:
+    // no anchor (mock), broadcast but not yet mined, and confirmed. An
+    // unconfirmed transaction has no block to prove inclusion in, so checking
+    // it can only ever "fail" — which would misreport a healthy, seconds-old
+    // anchor as a broken one.
+    const anchoredOnChain =
+      certificate.anchor.network !== "mock" &&
+      !!certificate.anchor.txid &&
+      certificate.anchor.blockHeight != null;
     if (opts.checkChain && anchoredOnChain) {
       const chain = await verifyOnChain(certificate, opts);
       checks.onChain = chain.ok;
