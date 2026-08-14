@@ -76,9 +76,9 @@ cd ~/.claude/plugins/**/claude-attest && npm install --omit=dev
 If you skip that step nothing breaks; `claude-attest` tells you exactly what to
 run the first time you need it.
 
-Capture begins immediately. Anchoring stays in `mock` mode — fully signed and
-tamper-evident locally, with no public timestamp — until you configure a
-NotaryHash key:
+Anchoring stays in `mock` mode — fully signed and tamper-evident locally, with
+no public timestamp — until you [subscribe](https://proofofprocess.ai) and
+configure a key:
 
 ```bash
 export NOTARYHASH_API_KEY=...
