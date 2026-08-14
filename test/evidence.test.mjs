@@ -76,3 +76,20 @@ test("countersignatures cannot rescue a broken record", () => {
   ]);
   assert.equal(e.level, 0, "a witness signature over a tampered record proves nothing");
 });
+
+test("a sound but unanchored record reads as locally verified, not broken", () => {
+  const unanchored = { certificate: { anchor: { txid: null, network: "mock", blockHeight: null } } };
+  const e = evidenceLevel(unanchored, allPass, []);
+  assert.equal(e.level, 0);
+  assert.equal(e.name, "Locally Verified", "the free tier is not a failure state");
+  assert.match(e.summary, /tamper-evident/);
+  assert.match(e.nextLevelRequires, /anchoring/);
+});
+
+test("genuinely broken integrity still reads as unverified", () => {
+  const confirmedAnchor = { certificate: { anchor: { txid: "abc", blockHeight: 1 } } };
+  const e = evidenceLevel(confirmedAnchor, { ...allPass, merkleRoot: false }, []);
+  assert.equal(e.level, 0);
+  assert.equal(e.name, "Unverified");
+  assert.match(e.summary, /did not pass/);
+});

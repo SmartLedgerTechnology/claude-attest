@@ -19,7 +19,14 @@
  */
 
 export const EVIDENCE_LEVELS = {
+  // Two very different situations share level 0, and conflating them is a bad
+  // first impression: a sound-but-unanchored record is the entire free tier,
+  // not a failure. `report()` picks the accurate summary.
   0: { name: "Unverified", summary: "Integrity checks did not pass." },
+  "0-unanchored": {
+    name: "Locally Verified",
+    summary: "Sound and tamper-evident, but not yet anchored to a public chain.",
+  },
   1: {
     name: "Self Attested",
     summary: "Creator-controlled capture, cryptographically sealed and independently timestamped.",
@@ -82,8 +89,15 @@ export function evidenceLevel(attestation, checks, verifiedCountersignatures = [
 }
 
 function report(level, criteria, countersignatures, blockedBy) {
+  // Integrity intact but no public timestamp is the free tier working exactly
+  // as designed — say so, rather than implying something is broken.
+  const soundButUnanchored = level === 0 && criteria.integrity && criteria.signed && !criteria.timestamped;
+  const descriptor = EVIDENCE_LEVELS[soundButUnanchored ? "0-unanchored" : level];
+
   const next = {
-    0: "pass the integrity, signature and timestamp checks",
+    0: soundButUnanchored
+      ? "anchoring this attestation to a public chain"
+      : "pass the integrity, signature and timestamp checks",
     1: "a countersignature from the capture platform (role: platform)",
     2: "a countersignature from an independent witness (role: witness)",
     3: null,
@@ -91,8 +105,8 @@ function report(level, criteria, countersignatures, blockedBy) {
 
   return {
     level,
-    name: EVIDENCE_LEVELS[level].name,
-    summary: EVIDENCE_LEVELS[level].summary,
+    name: descriptor.name,
+    summary: descriptor.summary,
     criteria,
     countersignatures: countersignatures.map((c) => ({ role: c.role, keyId: c.keyId })),
     nextLevelRequires: next,

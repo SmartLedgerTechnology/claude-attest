@@ -61,10 +61,20 @@ argue the other side.
 ## Install
 
 ```bash
-/plugin marketplace add smartledger/claude-attest
-/plugin install claude-attest
+/plugin marketplace add codenlighten/claude-attest
+/plugin install claude-attest@smartledger
+```
+
+Capture starts immediately and needs no dependencies — the hooks are pure Node
+builtins. Signing, anchoring and verification need one install:
+
+```bash
+cd ~/.claude/plugins/**/claude-attest && npm install --omit=dev
 /attest-init
 ```
+
+If you skip that step nothing breaks; `claude-attest` tells you exactly what to
+run the first time you need it.
 
 Capture begins immediately. Anchoring stays in `mock` mode — fully signed and
 tamper-evident locally, with no public timestamp — until you configure a

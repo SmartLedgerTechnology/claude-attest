@@ -133,7 +133,12 @@ export async function verifyAttestation(attestation, opts = {}) {
       blockTime: certificate.anchor.blockTime,
       type: certificate.anchor.type,
     };
-    if (opts.checkChain) {
+    // Only consult a chain when one was actually used. An unanchored or mock
+    // attestation has no on-chain claim to disprove, and reporting that as a
+    // FAILED check tells a free-tier user their sound, tamper-evident record is
+    // broken when it is not.
+    const anchoredOnChain = certificate.anchor.network !== "mock" && !!certificate.anchor.txid;
+    if (opts.checkChain && anchoredOnChain) {
       const chain = await verifyOnChain(certificate, opts);
       checks.onChain = chain.ok;
       if (chain.ok === false) reasons.push(chain.reason ?? "on-chain anchor did not verify");
