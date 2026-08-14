@@ -155,10 +155,10 @@ function harness({ status = "active", price = "price_creator" } = {}) {
   const sub = {
     id: "sub_1", status, customer: "cus_1",
     current_period_end: nowSec() + 30 * 24 * HOUR,
-    items: { data: [{ price: { id: price } }] },
+    items: { data: [{ price: { id: price, lookup_key: price } }] },
   };
   const stripe = { getSubscription: async () => sub };
-  const tierForPrice = (p) => (p === "price_pro" ? "pro" : "creator");
+  const tierForPrice = (p) => (p?.lookupKey === "price_pro" ? "pro" : "creator");
   return { store, deps: { store, stripe, tierForPrice, seen }, sub };
 }
 

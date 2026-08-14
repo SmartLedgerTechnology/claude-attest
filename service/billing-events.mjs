@@ -68,6 +68,8 @@ async function dispatch(event, deps) {
       if (!ACTIVE_STATUSES.has(sub.status)) {
         return { action: "not_active_yet", detail: { status: sub.status } };
       }
+      // This account hosts other products; their events reach this endpoint too.
+      if (!tierForPrice(priceOf(sub))) return { action: "not_our_product" };
 
       // Idempotent: a redelivered checkout event must not mint a second key.
       const existing = await store.getByCustomer(customerId);
@@ -98,6 +100,7 @@ async function dispatch(event, deps) {
 
       // Re-fetch rather than trusting a possibly stale payload.
       const sub = await stripe.getSubscription(obj.id).catch(() => obj);
+      if (!tierForPrice(priceOf(sub))) return { action: "not_our_product" };
 
       if (REVOKE_STATUSES.has(sub.status)) {
         await store.revoke(customerId, sub.status);
@@ -134,6 +137,12 @@ async function dispatch(event, deps) {
     case "customer.subscription.deleted": {
       const customerId = obj.customer;
       if (!customerId) return { action: "incomplete" };
+      if (!tierForPrice(priceOf(obj))) return { action: "not_our_product" };
+      // Another product's cancellation must not revoke our customer's key.
+      const rec = await store.getByCustomer(customerId);
+      if (rec?.subscriptionId && rec.subscriptionId !== obj.id) {
+        return { action: "other_subscription", detail: { held: rec.subscriptionId } };
+      }
       await store.revoke(customerId, "subscription_deleted");
       return { action: "revoked", detail: { customerId } };
     }
@@ -175,8 +184,20 @@ async function dispatch(event, deps) {
   }
 }
 
-function priceOf(sub) {
-  return sub?.items?.data?.[0]?.price?.id ?? sub?.items?.data?.[0]?.plan?.id ?? null;
+/**
+ * Identify a subscription's price. Returns BOTH the lookup key and the id:
+ * lookup keys are stable across test and live, ids are not, and we must be able
+ * to recognize our own product by something that survives the mode switch.
+ */
+export function priceOf(sub) {
+  const item = sub?.items?.data?.[0];
+  const price = item?.price ?? item?.plan ?? null;
+  if (!price) return { lookupKey: null, id: null, product: null };
+  return {
+    lookupKey: price.lookup_key ?? null,
+    id: price.id ?? null,
+    product: typeof price.product === "string" ? price.product : price.product?.id ?? null,
+  };
 }
 
 /** Stripe has moved this field around between API versions; accept both shapes. */

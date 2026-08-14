@@ -1,6 +1,6 @@
 {
   "name": "claude-attest",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Blockchain-timestamped proof of process for human-AI collaboration. Records how work was actually produced \u2014 human turns, revisions, tool use, consent \u2014 as a tamper-evident chain anchored to BSV via NotaryHash.",
   "author": {
     "name": "SmartLedger.Technology",

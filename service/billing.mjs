@@ -24,6 +24,7 @@ import { handleEvent, HANDLED_EVENTS } from "./billing-events.mjs";
 import { verifyAttestation } from "../packages/proof-of-process/src/verify.mjs";
 import { canonicalJSON, sha256Hex } from "../packages/proof-of-process/src/canonical.mjs";
 import { renderVerifyPage } from "./verify-page.mjs";
+import { reconcile } from "./reconcile.mjs";
 
 const PORT = Number(process.env.PORT ?? 8788);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -48,11 +49,16 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const WELCOME_HTML = fs.readFileSync(path.join(HERE, "welcome.html"), "utf8");
 const LANDING_HTML = fs.readFileSync(path.join(HERE, "landing.html"), "utf8");
 
-// Price → tier. Lookup keys stay stable across test and live; price IDs do not.
+// Price → tier, keyed by LOOKUP KEY because price ids differ between test and
+// live. Explicit price ids can be added via env for prices without one.
 const TIERS = {
   [process.env.PRICE_CREATOR ?? "pop_creator_monthly"]: "creator",
   [process.env.PRICE_PRO ?? "pop_pro_monthly"]: "pro",
 };
+// Optional belt-and-braces: restrict to specific Stripe product ids.
+const OUR_PRODUCTS = new Set(
+  (process.env.STRIPE_PRODUCTS ?? "").split(",").map((s) => s.trim()).filter(Boolean)
+);
 
 if (!SECRET_KEY) fatal("STRIPE_API_KEY is not set");
 if (!WEBHOOK_SECRET) fatal("STRIPE_WEBHOOK_SECRET is not set — refusing to start without signature verification");
@@ -70,6 +76,25 @@ const stripe = makeStripeClient(SECRET_KEY);
 http.createServer(handle).listen(PORT, HOST, () =>
   console.error(`billing service on ${HOST}:${PORT} | stripe mode=${MODE}`)
 );
+
+// Re-derive entitlements from Stripe on a timer. This is what makes the service
+// correct even if no webhook ever arrives — a misconfigured endpoint costs
+// customers minutes of delay rather than the product they paid for.
+const RECONCILE_MS = Number(process.env.RECONCILE_INTERVAL_MS ?? 15 * 60 * 1000);
+if (RECONCILE_MS > 0) {
+  const run = async () => {
+    try {
+      const s = await reconcile({ store, stripe, tierForPrice, log: (m) => console.error(m) });
+      if (s.provisioned || s.revoked || s.renewed || s.errors) {
+        console.error(`reconcile: ${JSON.stringify(s)}`);
+      }
+    } catch (e) {
+      console.error(`reconcile failed: ${e?.message ?? e}`);
+    }
+  };
+  setTimeout(run, 20_000).unref?.();
+  setInterval(run, RECONCILE_MS).unref?.();
+}
 
 async function handle(req, res) {
   try {
@@ -99,6 +124,7 @@ async function handle(req, res) {
       return await verifyPage(url.pathname.slice(3), res);
     }
     if (req.method === "POST" && url.pathname === "/v1/publish") return await publish(req, res);
+    if (req.method === "POST" && url.pathname === "/v1/reconcile") return await reconcileNow(req, res);
     if (req.method === "POST" && url.pathname === "/v1/stripe/webhook") return await webhook(req, res);
     if (req.method === "POST" && url.pathname === "/v1/checkout") return await checkout(req, res);
     if (req.method === "POST" && url.pathname === "/v1/claim") return await claim(req, res);
@@ -204,6 +230,15 @@ async function authorizePublisher(key) {
   const r = await store.authorize(key);
   if (r.ok) return { ok: true, via: "subscription", customerId: r.record.customerId };
   return { ok: false, reason: r.reason === "unknown key" ? "unknown or expired API key" : `subscription ${r.reason}` };
+}
+
+/** Operator-only manual trigger; the same job also runs on a timer. */
+async function reconcileNow(req, res) {
+  const body = await readJson(req);
+  const auth = await authorizePublisher(body?.apiKey ?? "");
+  if (!auth.ok || auth.via !== "operator") return json(res, 401, { error: "operator key required" });
+  const summary = await reconcile({ store, stripe, tierForPrice, log: (m) => console.error(m) });
+  return json(res, 200, summary);
 }
 
 async function loadPublished(id) {
@@ -339,8 +374,21 @@ async function authorize(req, res) {
   });
 }
 
-function tierForPrice(priceId) {
-  return TIERS[priceId] ?? "creator";
+/**
+ * Resolve a price to one of our tiers, or null if it is not our product.
+ *
+ * Returning null matters more than it looks: this Stripe account hosts several
+ * unrelated products, and a permissive default would treat another product's
+ * customer as ours and hand them a working API key. Unknown prices are not
+ * ours, and are ignored everywhere.
+ */
+function tierForPrice(price) {
+  // Accept a bare id for callers that still pass one.
+  const p = typeof price === "string" ? { lookupKey: null, id: price, product: null } : price ?? {};
+  if (OUR_PRODUCTS.size > 0 && p.product && !OUR_PRODUCTS.has(p.product)) return null;
+  if (p.lookupKey && TIERS[p.lookupKey]) return TIERS[p.lookupKey];
+  if (p.id && TIERS[p.id]) return TIERS[p.id];
+  return null;
 }
 
 /* ------------------------------ Stripe client ----------------------------- */
@@ -366,6 +414,13 @@ function makeStripeClient(key) {
       return s;
     },
     getCheckoutSession: (id) => call("GET", `/v1/checkout/sessions/${id}`),
+    listSubscriptions: async ({ limit = 100, startingAfter = null, status = "all" } = {}) => {
+      const q = new URLSearchParams({ limit: String(limit), status });
+      if (startingAfter) q.set("starting_after", startingAfter);
+      const r = await call("GET", `/v1/subscriptions?${q.toString()}`);
+      if (r.error) throw new Error(`stripe: ${r.error.message}`);
+      return r;
+    },
     listPrices: (lookupKey) =>
       call("GET", `/v1/prices?active=true&lookup_keys[]=${encodeURIComponent(lookupKey)}&expand[]=data.product`),
     createCheckoutSession: (params) => call("POST", "/v1/checkout/sessions", params),
