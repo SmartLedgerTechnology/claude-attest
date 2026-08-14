@@ -12,8 +12,8 @@
     {
       "name": "claude-attest",
       "source": "./",
-      "description": "Blockchain-timestamped proof of process for human-AI collaboration. Records how work was actually produced — human turns, revisions, tool use, consent — as a tamper-evident chain anchored to BSV.",
-      "version": "0.1.0",
+      "description": "Blockchain-timestamped proof of process for human-AI collaboration. Records how work was actually produced \u2014 human turns, revisions, tool use, consent \u2014 as a tamper-evident chain anchored to BSV.",
+      "version": "0.1.1",
       "author": {
         "name": "SmartLedger.Technology",
         "url": "https://proofofprocess.ai"

@@ -14,10 +14,14 @@
     ],
     "UserPromptSubmit": [
       {
-        "type": "command",
-        "command": "node \"${CLAUDE_PLUGIN_ROOT}/bin/attest-hook.mjs\"",
-        "async": true,
-        "timeout": 30
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/bin/attest-hook.mjs\"",
+            "async": true,
+            "timeout": 30
+          }
+        ]
       }
     ],
     "PreToolUse": [
