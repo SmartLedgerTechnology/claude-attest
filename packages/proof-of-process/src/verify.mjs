@@ -41,7 +41,14 @@ export async function verifyAttestation(attestation, opts = {}) {
     onChain: null,
   };
 
-  const { header, leaves = [], certificate } = attestation;
+  const { header, certificate } = attestation;
+  // Leaves are optional. A published attestation deliberately omits them: the
+  // Merkle root and the profile are already inside the signed header, so a
+  // third party can verify every claim without the creator disclosing what was
+  // said, typed, or run. Absent leaves are SKIPPED, never failed — "you didn't
+  // show me your private log" is not evidence of tampering.
+  const leavesDisclosed = Array.isArray(attestation.leaves);
+  const leaves = leavesDisclosed ? attestation.leaves : [];
 
   if (!header || !SUPPORTED_FORMATS.has(header.format)) {
     reasons.push(`unsupported format: ${header?.format}`);
@@ -49,22 +56,30 @@ export async function verifyAttestation(attestation, opts = {}) {
     checks.format = true;
   }
 
-  // 1. Sequence continuity.
-  let continuous = leaves.length === header?.leafCount;
-  if (!continuous) reasons.push(`leafCount ${header?.leafCount} != leaves.length ${leaves.length}`);
-  for (let i = 0; i < leaves.length; i++) {
-    if (leaves[i].seq !== i) {
-      continuous = false;
-      reasons.push(`leaf sequence break at index ${i}: seq=${leaves[i].seq}`);
-      break;
-    }
+  if (!leavesDisclosed) {
+    checks.leafContinuity = null;
+    checks.hashChain = null;
+    checks.merkleRoot = null;
   }
-  checks.leafContinuity = continuous;
+
+  // 1. Sequence continuity.
+  if (leavesDisclosed) {
+    let continuous = leaves.length === header?.leafCount;
+    if (!continuous) reasons.push(`leafCount ${header?.leafCount} != leaves.length ${leaves.length}`);
+    for (let i = 0; i < leaves.length; i++) {
+      if (leaves[i].seq !== i) {
+        continuous = false;
+        reasons.push(`leaf sequence break at index ${i}: seq=${leaves[i].seq}`);
+        break;
+      }
+    }
+    checks.leafContinuity = continuous;
+  }
 
   // 2. Hash chain. The genesis leaf's prev is the all-zero hash.
   let chained = true;
   let expectedPrev = "0".repeat(64);
-  for (const leaf of leaves) {
+  for (const leaf of leavesDisclosed ? leaves : []) {
     if (leaf.prev !== expectedPrev) {
       chained = false;
       reasons.push(`hash chain break at seq=${leaf.seq}: prev=${leaf.prev?.slice(0, 12)}… expected ${expectedPrev.slice(0, 12)}…`);
@@ -72,13 +87,15 @@ export async function verifyAttestation(attestation, opts = {}) {
     }
     expectedPrev = hashLeaf(leaf);
   }
-  checks.hashChain = chained;
+  if (leavesDisclosed) checks.hashChain = chained;
 
   // 3. Merkle root.
-  const root = merkleRoot(leaves.map(hashLeaf));
-  checks.merkleRoot = root === header?.merkleRoot;
-  if (!checks.merkleRoot) {
-    reasons.push(`merkle root mismatch: computed ${root}, header ${header?.merkleRoot}`);
+  if (leavesDisclosed) {
+    const root = merkleRoot(leaves.map(hashLeaf));
+    checks.merkleRoot = root === header?.merkleRoot;
+    if (!checks.merkleRoot) {
+      reasons.push(`merkle root mismatch: computed ${root}, header ${header?.merkleRoot}`);
+    }
   }
 
   // 4 + 5. Anchor binding and signature.

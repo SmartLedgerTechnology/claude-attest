@@ -69,6 +69,7 @@ export function loadConfig() {
     captureContent: parseBool(process.env.CLAUDE_ATTEST_CAPTURE_CONTENT),
     countersignerUrl: process.env.COUNTERSIGNER_URL,
     countersignerApiKey: process.env.COUNTERSIGNER_API_KEY,
+    publicBase: process.env.PROOFOFPROCESS_URL,
   };
   const merged = { ...DEFAULTS, ...file };
   for (const [k, v] of Object.entries(env)) if (v !== undefined) merged[k] = v;

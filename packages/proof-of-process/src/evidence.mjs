@@ -56,11 +56,14 @@ export const COUNTERSIGNATURE_ROLES = { PLATFORM: "platform", WITNESS: "witness"
  * evidence, so callers must pass `verifiedCountersignatures`.
  */
 export function evidenceLevel(attestation, checks, verifiedCountersignatures = []) {
+  // `null` means "not disclosed", which is acceptable; `false` means "failed",
+  // which is not. A published attestation withholds its leaves by design.
+  const notFailed = (v) => v !== false;
   const integrity =
     checks.format === true &&
-    checks.leafContinuity === true &&
-    checks.hashChain === true &&
-    checks.merkleRoot === true;
+    notFailed(checks.leafContinuity) &&
+    notFailed(checks.hashChain) &&
+    notFailed(checks.merkleRoot);
 
   // A false transcript check is disqualifying; null (not applicable) is not.
   const structureIntact = integrity && checks.transcriptChain !== false;

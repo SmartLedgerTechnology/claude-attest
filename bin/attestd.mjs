@@ -58,6 +58,8 @@ async function run() {
       return doVerify(args[0], args);
     case "refresh":
       return doRefresh(args[0]);
+    case "publish":
+      return doPublish(args[0]);
     case "c2pa":
       return doC2pa(args);
     case "list":
@@ -72,6 +74,7 @@ async function run() {
           "  list                 sessions captured on this machine",
           "  verify <session|path>  verify an attestation (auto-refreshes a pending anchor)",
           "  refresh <session>    pull the confirmed certificate + SPV envelope",
+          "  publish <session>    host it at a shareable verify URL (subscribers)",
           "  c2pa <session>       emit C2PA assertions / a manifest definition",
           "  finalize <session>   build, sign, and anchor a session checkpoint",
           "  sweep                finalize any session left unanchored",
@@ -220,6 +223,49 @@ async function doRefresh(target) {
     console.log("\nThe local certificate now carries a full SPV envelope and can be");
     console.log("verified against Bitcoin block headers with no trust in the service.");
   }
+}
+
+/**
+ * Publish an attestation to a shareable verify URL.
+ *
+ * Sends the header, certificate and countersignatures — never the leaves. The
+ * signed header already carries the Merkle root and the collaboration profile,
+ * so the page can prove everything it claims while your event log, which
+ * records what you typed and ran, stays on this machine.
+ */
+async function doPublish(target) {
+  if (!target) throw new Error("usage: publish <session-id|path-to-attestation.json>");
+  const config = loadConfig();
+  const apiKey = config.countersignerApiKey ?? config.apiKey;
+  if (!apiKey) {
+    throw new Error("publishing needs a subscription key — set COUNTERSIGNER_API_KEY (see https://proofofprocess.ai)");
+  }
+  const file = resolveAttestationPath(target);
+  const attestation = JSON.parse(fs.readFileSync(file, "utf8"));
+  if (!attestation.certificate) throw new Error("this attestation has never been anchored; run `finalize` first");
+
+  const base = (config.publicBase ?? "https://proofofprocess.ai").replace(/\/$/, "");
+  const res = await fetch(`${base}/v1/publish`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      apiKey,
+      notaryHashId: attestation.notaryHashId,
+      attestation: {
+        header: attestation.header,
+        certificate: attestation.certificate,
+        countersignatures: attestation.countersignatures ?? [],
+      },
+    }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error ?? `publish failed: HTTP ${res.status}`);
+
+  console.log("published");
+  console.log(`  ${data.url}`);
+  console.log("");
+  console.log("Your event log stayed on this machine — only the signed header,");
+  console.log("certificate and countersignatures were sent.");
 }
 
 async function doVerify(target, argv = []) {

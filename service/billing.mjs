@@ -14,12 +14,16 @@
  */
 
 import http from "node:http";
+import { timingSafeEqual } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { KeyStore } from "./keystore.mjs";
 import { verifyStripeSignature } from "./stripe-signature.mjs";
 import { handleEvent, HANDLED_EVENTS } from "./billing-events.mjs";
+import { verifyAttestation } from "../packages/proof-of-process/src/verify.mjs";
+import { canonicalJSON, sha256Hex } from "../packages/proof-of-process/src/canonical.mjs";
+import { renderVerifyPage } from "./verify-page.mjs";
 
 const PORT = Number(process.env.PORT ?? 8788);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -29,7 +33,14 @@ const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET ?? "";
 const SUCCESS_URL = process.env.CHECKOUT_SUCCESS_URL ?? "https://proofofprocess.ai/welcome?session={CHECKOUT_SESSION_ID}";
 const CANCEL_URL = process.env.CHECKOUT_CANCEL_URL ?? "https://proofofprocess.ai/";
 const PORTAL_RETURN_URL = process.env.PORTAL_RETURN_URL ?? "https://proofofprocess.ai/account";
-const MAX_BODY = 1024 * 1024;
+const MAX_BODY = 4 * 1024 * 1024;
+const PUBLIC_BASE = process.env.PUBLIC_BASE_URL ?? "https://proofofprocess.ai";
+// Operational keys, mirroring the countersigner. Publishing is a subscriber
+// feature, but we still need a path for demos, support, and our own records
+// that does not require holding a subscription to our own product.
+const OPERATOR_KEYS = new Set(
+  (process.env.PUBLISH_API_KEYS ?? "").split(",").map((k) => k.trim()).filter(Boolean)
+);
 
 // Read once at boot: the page is static, and a disk read per request would be
 // pure waste on the one endpoint a nervous new customer is staring at.
@@ -48,7 +59,11 @@ if (!WEBHOOK_SECRET) fatal("STRIPE_WEBHOOK_SECRET is not set — refusing to sta
 if (MODE === "live" && !SECRET_KEY.includes("_live_")) fatal("STRIPE_MODE=live but the key is not a live key");
 if (MODE === "test" && !SECRET_KEY.includes("_test_")) fatal("STRIPE_MODE=test but the key is not a test key");
 
-const store = new KeyStore(await connectRedis());
+const redis = await connectRedis();
+const store = new KeyStore(redis);
+// In-memory fallbacks so the service is exercisable without Redis.
+const published = new Map();
+const publishedAlias = new Map();
 const seen = makeSeenSet();
 const stripe = makeStripeClient(SECRET_KEY);
 
@@ -80,6 +95,10 @@ async function handle(req, res) {
       });
       return res.end(WELCOME_HTML);
     }
+    if (req.method === "GET" && url.pathname.startsWith("/v/")) {
+      return await verifyPage(url.pathname.slice(3), res);
+    }
+    if (req.method === "POST" && url.pathname === "/v1/publish") return await publish(req, res);
     if (req.method === "POST" && url.pathname === "/v1/stripe/webhook") return await webhook(req, res);
     if (req.method === "POST" && url.pathname === "/v1/checkout") return await checkout(req, res);
     if (req.method === "POST" && url.pathname === "/v1/claim") return await claim(req, res);
@@ -125,6 +144,92 @@ async function webhook(req, res) {
     console.error(`webhook handling failed for ${event.id} (${event.type}): ${e?.stack ?? e}`);
     return json(res, 200, { received: true, action: "deferred" });
   }
+}
+
+/**
+ * Publish an attestation so it can be verified from a link.
+ *
+ * Subscribers only: hosting is the thing a subscription actually buys, and it
+ * is what stops this becoming free permanent storage for anyone.
+ *
+ * We store the header, certificate and countersignatures — never the leaves.
+ * The Merkle root and the collaboration profile are already inside the signed
+ * header, so a reader can verify every claim on the page while the creator's
+ * event log, which reveals what they typed and ran, stays on their machine.
+ */
+async function publish(req, res) {
+  const body = await readJson(req);
+  const auth = await authorizePublisher(body?.apiKey ?? "");
+  if (!auth.ok) return json(res, 401, { error: auth.reason ?? "unknown or expired API key" });
+
+  const { header, certificate, countersignatures } = body?.attestation ?? {};
+  if (!header || !certificate) return json(res, 400, { error: "attestation must include a header and a certificate" });
+
+  // The record is named by the digest that was anchored. Anyone holding the
+  // attestation can derive the same id, and a mismatch here means the header
+  // and the certificate do not belong together.
+  const digest = sha256Hex(canonicalJSON(header));
+  if (digest !== certificate.payloadHash) {
+    return json(res, 400, { error: "header does not match the certificate's payloadHash" });
+  }
+
+  const record = {
+    id: digest,
+    header,
+    certificate,
+    countersignatures: Array.isArray(countersignatures) ? countersignatures : [],
+    customerId: auth.customerId ?? null,
+    publishedVia: auth.via,
+    publishedAt: new Date().toISOString(),
+  };
+  const payload = JSON.stringify(record);
+  if (redis) {
+    await redis.set(`pop:published:${digest}`, payload);
+    if (body?.notaryHashId) await redis.set(`pop:published-alias:${body.notaryHashId}`, digest);
+  } else {
+    published.set(digest, payload);
+    if (body?.notaryHashId) publishedAlias.set(body.notaryHashId, digest);
+  }
+  return json(res, 200, { id: digest, url: `${PUBLIC_BASE}/v/${digest}` });
+}
+
+/** Operational keys first, then subscriptions. Constant-time on the env path. */
+async function authorizePublisher(key) {
+  if (typeof key !== "string" || !key) return { ok: false, reason: "no API key" };
+  for (const k of OPERATOR_KEYS) {
+    const a = Buffer.from(k);
+    const b = Buffer.from(key);
+    if (a.length === b.length && timingSafeEqual(a, b)) return { ok: true, via: "operator" };
+  }
+  const r = await store.authorize(key);
+  if (r.ok) return { ok: true, via: "subscription", customerId: r.record.customerId };
+  return { ok: false, reason: r.reason === "unknown key" ? "unknown or expired API key" : `subscription ${r.reason}` };
+}
+
+async function loadPublished(id) {
+  const direct = redis ? await redis.get(`pop:published:${id}`) : published.get(id);
+  if (direct) return JSON.parse(direct);
+  const aliased = redis ? await redis.get(`pop:published-alias:${id}`) : publishedAlias.get(id);
+  if (!aliased) return null;
+  const rec = redis ? await redis.get(`pop:published:${aliased}`) : published.get(aliased);
+  return rec ? JSON.parse(rec) : null;
+}
+
+async function verifyPage(id, res) {
+  const html = async (code, body) => {
+    res.writeHead(code, { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=60" });
+    res.end(body);
+  };
+  const rec = await loadPublished(decodeURIComponent(id || ""));
+  if (!rec) return html(404, renderVerifyPage({ id, notFound: true }));
+
+  // Verified here, on every request, from the stored bytes — never trusting a
+  // verdict cached at publish time.
+  const report = await verifyAttestation(
+    { header: rec.header, certificate: rec.certificate, countersignatures: rec.countersignatures },
+    { checkChain: true }
+  );
+  return html(200, renderVerifyPage({ id: rec.id, report, header: rec.header, certificate: rec.certificate, publishedAt: rec.publishedAt }));
 }
 
 async function checkout(req, res) {
