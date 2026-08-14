@@ -1,0 +1,31 @@
+{
+  "name": "@smartledger.technology/proof-of-process",
+  "version": "0.1.0",
+  "description": "Portable format and verifier for attesting how human-AI work was produced. Anchors to BSV via NotaryHash.",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./profile": "./src/profile.mjs",
+    "./merkle": "./src/merkle.mjs",
+    "./canonical": "./src/canonical.mjs"
+  },
+  "files": ["src", "README.md", "LICENSE"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test ../../test/"
+  },
+  "peerDependencies": {
+    "@noble/curves": "^1.4.0",
+    "@noble/post-quantum": "^0.2.0",
+    "@smartledger/notaryhash": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@noble/curves": { "optional": true },
+    "@noble/post-quantum": { "optional": true },
+    "@smartledger/notaryhash": { "optional": true }
+  },
+  "keywords": ["provenance", "attestation", "ai", "authorship", "bsv", "notaryhash", "c2pa"],
+  "license": "MIT",
+  "author": "SmartLedger.Technology"
+}

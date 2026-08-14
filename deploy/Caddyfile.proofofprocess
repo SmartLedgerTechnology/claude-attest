@@ -1,0 +1,41 @@
+# --- ProofOfProcess.ai ---------------------------------------------------
+# Append to /root/notaryhash/Caddyfile ONLY once DNS resolves to this droplet.
+# Caddy requests a certificate per hostname on load; a name that does not yet
+# resolve fails ACME and counts against Let's Encrypt rate limits (5 failures
+# per account/hostname/hour). Confirm first:
+#
+#   dig +short proofofprocess.ai @1.1.1.1     # must return 143.198.120.145
+#
+# Then:
+#   docker exec notaryhash-caddy-1 caddy validate --config /etc/caddy/Caddyfile
+#   docker exec notaryhash-caddy-1 caddy reload   --config /etc/caddy/Caddyfile
+
+proofofprocess.ai {
+	encode gzip
+
+	# The countersigner's public key, served from the apex so a verifier can
+	# find it at a predictable URL without knowing our internal topology.
+	handle /v1/pubkey {
+		reverse_proxy pop-countersigner:8787
+	}
+
+	# Verify pages. Nothing serves these yet — until the verify app exists,
+	# return an explicit 501 rather than a bare 404, because every C2PA
+	# assertion we have issued points here and a stray 404 reads as a broken
+	# proof rather than an unbuilt feature.
+	handle /v/* {
+		respond "Verification pages are not deployed yet. Verify locally with: claude-attest verify <attestation.json>" 501
+	}
+
+	root * /srv/proofofprocess
+	file_server
+}
+
+www.proofofprocess.ai {
+	redir https://proofofprocess.ai{uri} permanent
+}
+
+countersign.proofofprocess.ai {
+	encode gzip
+	reverse_proxy pop-countersigner:8787
+}

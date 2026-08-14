@@ -1,0 +1,80 @@
+# ProofOfProcess countersigner — a SEPARATE compose project from NotaryHash.
+#
+# It joins the existing notaryhash_default network as an external network so
+# Caddy can reach it by name, without adding a service to NotaryHash's compose
+# file. Nothing here can recreate, rebuild, or restart the notary container.
+#
+#   docker compose -f docker-compose.countersigner.yml up -d --build
+#
+# Deliberately no host port: the only way in is through Caddy over TLS. An API
+# key crossing plaintext HTTP would be worse than no API key.
+
+services:
+  countersigner:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: proofofprocess-countersigner:0.1.0
+    container_name: pop-countersigner
+    restart: unless-stopped
+    env_file: .env.countersigner
+    environment:
+      COUNTERSIGNER_NAME: ${COUNTERSIGNER_NAME:-proofofprocess.ai}
+      COUNTERSIGNER_ALGORITHM: ML-DSA-65
+      COUNTERSIGNER_KEY: /data/countersigner.json
+      PORT: "8787"
+      HOST: 0.0.0.0
+    volumes:
+      # The signing key. Every Level 2 claim ever issued rests on this volume —
+      # back it up somewhere other than this droplet.
+      - countersigner-keys:/data
+    expose:
+      - "8787"
+    networks:
+      - notaryhash
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  billing:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: proofofprocess-countersigner:0.1.0
+    container_name: pop-billing
+    restart: unless-stopped
+    env_file: .env.billing
+    environment:
+      PORT: "8788"
+      HOST: 0.0.0.0
+      # Shares NotaryHash's Redis. Our keys are namespaced `pop:` — the only
+      # other key on that instance is `notaryhash:utxos`, which coordinates a
+      # live funding wallet and must never be touched.
+      REDIS_URL: redis://redis:6379
+    expose:
+      - "8788"
+    networks:
+      - notaryhash
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    command: ["node", "service/billing.mjs"]
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+networks:
+  notaryhash:
+    # Created by the NotaryHash stack; we attach, we do not define it.
+    external: true
+    name: notaryhash_default
+
+volumes:
+  countersigner-keys:

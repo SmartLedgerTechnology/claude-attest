@@ -1,0 +1,24 @@
+# --- ProofOfProcess countersigner ---------------------------------------
+# Append to /root/notaryhash/Caddyfile, then reload (do NOT restart Caddy):
+#   docker exec notaryhash-caddy-1 caddy validate --config /etc/caddy/Caddyfile
+#   docker exec notaryhash-caddy-1 caddy reload   --config /etc/caddy/Caddyfile
+#
+# countersign.proofofprocess.ai is listed second on purpose: Caddy obtains a
+# certificate per hostname, and a name that does not yet resolve would fail ACME
+# and retry against Let's Encrypt rate limits. Add it only once the domain's DNS
+# points at this droplet.
+
+countersign.notaryhash.com {
+	encode gzip
+
+	# The signing key's public half is meant to be public — anyone verifying a
+	# countersignature needs it, and they should not have to ask us for it.
+	@pubkey path /v1/pubkey /healthz
+	handle @pubkey {
+		reverse_proxy pop-countersigner:8787
+	}
+
+	handle {
+		reverse_proxy pop-countersigner:8787
+	}
+}

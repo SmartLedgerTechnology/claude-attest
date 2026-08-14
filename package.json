@@ -1,0 +1,29 @@
+{
+  "name": "claude-attest",
+  "version": "0.1.0",
+  "description": "Claude Code capture adapter for proof-of-process attestation, anchored to BSV via NotaryHash",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "bin": {
+    "claude-attest": "./bin/attestd.mjs"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "attest": "node ./bin/attestd.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@noble/post-quantum": "^0.2.0",
+    "@smartledger/notaryhash": "^1.0.0"
+  },
+  "optionalDependencies": {
+    "@noble/curves": "^1.4.0"
+  },
+  "license": "MIT",
+  "author": "SmartLedger.Technology"
+}

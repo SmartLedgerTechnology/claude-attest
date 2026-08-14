@@ -1,0 +1,19 @@
+node_modules/
+package-lock.json
+*.log
+.DS_Store
+
+# Never commit key material, captured sessions, or credentials.
+keys/
+sessions/
+attestor.json
+countersigner.json
+*.attestation.json
+.env
+.env.*
+!.env.example
+
+# Server-side deploy secrets
+deploy/.env.billing*
+deploy/.env.countersigner*
+resume.md

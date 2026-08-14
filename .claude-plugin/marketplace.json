@@ -1,0 +1,35 @@
+{
+  "name": "smartledger",
+  "owner": {
+    "name": "SmartLedger.Technology",
+    "url": "https://proofofprocess.ai"
+  },
+  "metadata": {
+    "description": "Provenance and attestation tooling from SmartLedger.Technology",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "claude-attest",
+      "source": "./",
+      "description": "Blockchain-timestamped proof of process for human-AI collaboration. Records how work was actually produced — human turns, revisions, tool use, consent — as a tamper-evident chain anchored to BSV.",
+      "version": "0.1.0",
+      "author": {
+        "name": "SmartLedger.Technology",
+        "url": "https://proofofprocess.ai"
+      },
+      "homepage": "https://proofofprocess.ai",
+      "license": "MIT",
+      "category": "security",
+      "keywords": [
+        "provenance",
+        "attestation",
+        "authorship",
+        "compliance",
+        "c2pa",
+        "bsv",
+        "notaryhash"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Your API key — ProofOfProcess.ai</title>
+<meta name="robots" content="noindex" />
+<style>
+  :root{
+    --bg:#07111f; --panel:rgba(255,255,255,.055); --panel2:rgba(255,255,255,.03);
+    --line:rgba(255,255,255,.11); --text:#f4f8fb; --muted:#9fb0c4;
+    --cyan:#65e6ff; --blue:#5f8cff; --green:#7ef0bf; --amber:#ffd479; --red:#ff8f8f;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; color:var(--text); min-height:100vh;
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(95,140,255,.18), transparent 32%),
+      radial-gradient(circle at 85% 15%, rgba(167,121,255,.14), transparent 30%),
+      linear-gradient(180deg,var(--bg),#06101a 55%,#08131f);
+    display:flex; align-items:flex-start; justify-content:center; padding:6vh 20px 10vh;
+  }
+  .wrap{width:min(680px,100%)}
+  .brand{font-weight:800;letter-spacing:-.03em;font-size:1rem;margin-bottom:2.2rem}
+  .brand span{color:var(--cyan)}
+  h1{font-size:clamp(1.7rem,4.5vw,2.3rem);line-height:1.15;letter-spacing:-.03em;margin:0 0 .6rem;text-wrap:balance}
+  .sub{color:var(--muted);margin:0 0 2rem;line-height:1.55}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:1.4rem 1.5rem;margin-bottom:1.1rem}
+
+  /* The warning has to outrank everything else on the page: this key is
+     shown once, and a missed notice here becomes a support ticket. */
+  .warn{
+    display:flex;gap:.8rem;align-items:flex-start;
+    background:rgba(255,212,121,.10);border:1px solid rgba(255,212,121,.35);
+    border-radius:14px;padding:1rem 1.15rem;margin-bottom:1.1rem;
+  }
+  .warn .icon{font-size:1.1rem;line-height:1.3}
+  .warn strong{color:var(--amber)}
+  .warn p{margin:.25rem 0 0;color:#e8d6ae;font-size:.92rem;line-height:1.5}
+
+  .keyrow{display:flex;gap:.6rem;align-items:stretch;margin-top:.9rem}
+  .key{
+    flex:1;font-family:var(--mono);font-size:.9rem;word-break:break-all;
+    background:#040a12;border:1px solid var(--line);border-radius:11px;
+    padding:.95rem 1rem;color:var(--green);user-select:all;line-height:1.45;
+  }
+  button{
+    font:inherit;font-weight:700;cursor:pointer;border-radius:11px;
+    border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);
+    color:#fff;padding:.8rem 1.15rem;transition:.18s ease;white-space:nowrap;
+  }
+  button:hover{background:rgba(255,255,255,.13)}
+  button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+  button.primary{background:linear-gradient(135deg,var(--blue),var(--cyan));border-color:transparent;color:#04121c}
+  button.ghost{background:transparent}
+  button[disabled]{opacity:.55;cursor:default}
+
+  .label{font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-family:var(--mono)}
+  .meta{display:flex;gap:1.6rem;flex-wrap:wrap;margin-top:1rem;font-size:.85rem;color:var(--muted)}
+  .meta b{color:var(--text);font-weight:600}
+
+  h2{font-size:1rem;margin:0 0 .8rem;letter-spacing:-.01em}
+  ol{margin:0;padding-left:1.15rem;color:var(--muted);line-height:1.65;font-size:.92rem}
+  ol li{margin-bottom:.6rem}
+  code{font-family:var(--mono);font-size:.85em;background:#040a12;border:1px solid var(--line);border-radius:6px;padding:.15em .45em;color:var(--cyan)}
+  pre{
+    font-family:var(--mono);font-size:.82rem;background:#040a12;border:1px solid var(--line);
+    border-radius:11px;padding:.9rem 1rem;overflow-x:auto;color:#cfe6f5;margin:.5rem 0 0;line-height:1.6;
+  }
+  a{color:var(--cyan)}
+  .status{color:var(--muted);font-size:.9rem}
+  .err{border-color:rgba(255,143,143,.4);background:rgba(255,143,143,.08)}
+  .err h1{color:var(--red)}
+  .hidden{display:none}
+  .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.25);border-top-color:var(--cyan);border-radius:50%;animation:s .8s linear infinite;vertical-align:-2px;margin-right:.5rem}
+  @keyframes s{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){.spin{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">ProofOfProcess<span>.ai</span></div>
+
+  <div id="loading">
+    <h1><span class="spin"></span>Setting up your account…</h1>
+    <p class="sub">One moment while we confirm your subscription.</p>
+  </div>
+
+  <div id="success" class="hidden">
+    <h1>You're in. Here's your API key.</h1>
+    <p class="sub">Use it to anchor and countersign your attestations.</p>
+
+    <div class="warn">
+      <div class="icon">⚠️</div>
+      <div>
+        <strong>This is the only time we can show you this key.</strong>
+        <p>We store only a hash of it, so it can't be looked up later — not by you, not by us. Copy it somewhere safe now.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Your API key</div>
+      <div class="keyrow">
+        <div class="key" id="apiKey">—</div>
+        <button class="primary" id="copyBtn">Copy</button>
+      </div>
+      <div class="meta">
+        <div>Plan <b id="tier">—</b></div>
+        <div>Renews <b id="expires">—</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Next steps</h2>
+      <ol>
+        <li>Install the plugin:<pre>/plugin marketplace add smartledger/claude-attest
+/plugin install claude-attest</pre></li>
+        <li>Create your signing identity — this key never leaves your machine:<pre>/attest-init</pre></li>
+        <li>Point it at your subscription:<pre>export COUNTERSIGNER_URL=https://countersign.proofofprocess.ai
+export COUNTERSIGNER_API_KEY=<span id="envKey">your-key</span></pre></li>
+      </ol>
+    </div>
+
+    <p class="status">Lost the key later? Open this page again and choose to issue a replacement — the old one stops working immediately.</p>
+  </div>
+
+  <div id="claimed" class="hidden">
+    <h1>This key has already been issued.</h1>
+    <p class="sub">
+      Keys are shown exactly once and we keep only a hash, so the original can't be displayed again.
+      You can issue a replacement — doing so <strong>immediately stops the previous key from working</strong>.
+    </p>
+    <div class="card">
+      <button class="primary" id="replaceBtn">Issue a replacement key</button>
+      <p class="status" style="margin:.9rem 0 0">Only do this if you no longer have the original.</p>
+    </div>
+  </div>
+
+  <div id="error" class="hidden">
+    <div class="card err">
+      <h1 id="errTitle">Something went wrong</h1>
+      <p class="sub" id="errBody">Please try again.</p>
+      <p class="status">If this persists, contact support with your Stripe receipt.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  // Stripe substitutes {CHECKOUT_SESSION_ID}; accept the common aliases too.
+  const sessionId = params.get("session") || params.get("session_id") || params.get("checkout_session_id");
+
+  const show = (id) => {
+    for (const el of ["loading","success","claimed","error"]) {
+      document.getElementById(el).classList.toggle("hidden", el !== id);
+    }
+  };
+  const fail = (title, body) => {
+    document.getElementById("errTitle").textContent = title;
+    document.getElementById("errBody").textContent = body;
+    show("error");
+  };
+
+  function render(data) {
+    document.getElementById("apiKey").textContent = data.apiKey;
+    document.getElementById("envKey").textContent = data.apiKey;
+    document.getElementById("tier").textContent = data.tier || "creator";
+    if (data.expiresAt) {
+      const d = new Date(data.expiresAt);
+      document.getElementById("expires").textContent =
+        d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    }
+    show("success");
+  }
+
+  async function claim(replace) {
+    const res = await fetch("/v1/claim", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(replace ? { sessionId, replace: true } : { sessionId }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return render(data);
+    if (res.status === 409 && data.canReplace) return show("claimed");
+    if (res.status === 402) {
+      return fail("Payment not completed", "Stripe hasn't confirmed this payment yet. If you've just paid, wait a moment and reload.");
+    }
+    if (res.status === 404) {
+      return fail("We couldn't find this checkout", "The link may be incomplete or expired. Check the link in your Stripe receipt.");
+    }
+    fail("Something went wrong", data.error || "Please try again in a moment.");
+  }
+
+  document.getElementById("copyBtn").addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    try {
+      await navigator.clipboard.writeText(document.getElementById("apiKey").textContent);
+      btn.textContent = "Copied";
+      setTimeout(() => (btn.textContent = "Copy"), 2000);
+    } catch {
+      // Clipboard access can be blocked; the key is already select-all-able.
+      btn.textContent = "Select it";
+    }
+  });
+
+  document.getElementById("replaceBtn").addEventListener("click", (e) => {
+    e.currentTarget.disabled = true;
+    e.currentTarget.textContent = "Issuing…";
+    claim(true);
+  });
+
+  if (!sessionId) {
+    fail("Missing checkout reference", "This page needs the link from your Stripe receipt to identify your subscription.");
+  } else {
+    claim(false);
+  }
+</script>
+</body>
+</html>

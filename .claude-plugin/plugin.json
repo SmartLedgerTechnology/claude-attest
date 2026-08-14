@@ -1,0 +1,12 @@
+{
+  "name": "claude-attest",
+  "version": "0.1.0",
+  "description": "Blockchain-timestamped proof of process for human-AI collaboration. Records how work was actually produced — human turns, revisions, tool use, consent — as a tamper-evident chain anchored to BSV via NotaryHash.",
+  "author": {
+    "name": "SmartLedger.Technology",
+    "url": "https://proofofprocess.ai"
+  },
+  "homepage": "https://proofofprocess.ai",
+  "license": "MIT",
+  "keywords": ["provenance", "attestation", "authorship", "compliance", "bsv", "notaryhash"]
+}
