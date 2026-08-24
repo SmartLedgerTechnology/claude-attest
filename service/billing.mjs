@@ -25,6 +25,7 @@ import { verifyAttestation } from "../packages/proof-of-process/src/verify.mjs";
 import { canonicalJSON, sha256Hex } from "../packages/proof-of-process/src/canonical.mjs";
 import { renderVerifyPage } from "./verify-page.mjs";
 import { reconcile } from "./reconcile.mjs";
+import { Notifier, events } from "./notify.mjs";
 
 const PORT = Number(process.env.PORT ?? 8788);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -71,11 +72,17 @@ const store = new KeyStore(redis);
 const published = new Map();
 const publishedAlias = new Map();
 const seen = makeSeenSet();
+const notifier = new Notifier({
+  token: process.env.TELEGRAM_BOT_TOKEN,
+  chatId: process.env.TELEGRAM_CHAT_ID,
+});
+if (notifier.enabled) console.error("notifications: telegram enabled");
 const stripe = makeStripeClient(SECRET_KEY);
 
-http.createServer(handle).listen(PORT, HOST, () =>
-  console.error(`billing service on ${HOST}:${PORT} | stripe mode=${MODE}`)
-);
+http.createServer(handle).listen(PORT, HOST, () => {
+  console.error(`billing service on ${HOST}:${PORT} | stripe mode=${MODE}`);
+  notifier.send("started", events.started({ mode: MODE, version: process.env.SERVICE_VERSION }));
+});
 
 // Re-derive entitlements from Stripe on a timer. This is what makes the service
 // correct even if no webhook ever arrives — a misconfigured endpoint costs
@@ -84,7 +91,14 @@ const RECONCILE_MS = Number(process.env.RECONCILE_INTERVAL_MS ?? 15 * 60 * 1000)
 if (RECONCILE_MS > 0) {
   const run = async () => {
     try {
-      const s = await reconcile({ store, stripe, tierForPrice, log: (m) => console.error(m) });
+      const s = await reconcile({
+        store, stripe, tierForPrice,
+        log: (m) => {
+          console.error(m);
+          const hit = /PROVISIONED (\S+)/.exec(m);
+          if (hit) notifier.send("reconcile-provisioned", events.reconcileProvisioned({ customerId: hit[1] }));
+        },
+      });
       if (s.provisioned || s.revoked || s.renewed || s.errors) {
         console.error(`reconcile: ${JSON.stringify(s)}`);
       }
@@ -165,6 +179,7 @@ async function webhook(req, res) {
     // the success page, which looks it up by checkout session.
     const { apiKey, ...loggable } = outcome;
     console.error(`webhook ${event.type} -> ${JSON.stringify(loggable)}`);
+    announce(outcome, event);
     return json(res, 200, { received: true, action: outcome.action });
   } catch (e) {
     console.error(`webhook handling failed for ${event.id} (${event.type}): ${e?.stack ?? e}`);
@@ -216,6 +231,7 @@ async function publish(req, res) {
     published.set(digest, payload);
     if (body?.notaryHashId) publishedAlias.set(body.notaryHashId, digest);
   }
+  notifier.send("published", events.published({ url: `${PUBLIC_BASE}/v/${digest}` }));
   return json(res, 200, { id: digest, url: `${PUBLIC_BASE}/v/${digest}` });
 }
 
@@ -265,6 +281,22 @@ async function verifyPage(id, res) {
     { checkChain: true }
   );
   return html(200, renderVerifyPage({ id: rec.id, report, header: rec.header, certificate: rec.certificate, publishedAt: rec.publishedAt }));
+}
+
+/** Map a webhook outcome onto a notification, where one is warranted. */
+function announce(outcome, event) {
+  const d = outcome.detail ?? {};
+  const customerId = d.customerId ?? event.data?.object?.customer;
+  switch (outcome.action) {
+    case "provisioned":
+      return notifier.send("signup", events.signup({ tier: d.tier, customerId, via: event.type }));
+    case "suspended":
+      return notifier.send("payment-failed", events.paymentFailed({ customerId, attempt: d.attempt }));
+    case "revoked":
+      return notifier.send("canceled", events.canceled({ customerId, reason: d.status }));
+    default:
+      return undefined;
+  }
 }
 
 async function checkout(req, res) {
@@ -326,6 +358,7 @@ async function claim(req, res) {
         : {}),
     });
   }
+  notifier.send("claimed", events.claimed({ customerId, tier: result.record.tier }));
   return json(res, 200, {
     apiKey: result.plaintext,
     tier: result.record.tier,
