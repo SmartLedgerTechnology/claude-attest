@@ -111,7 +111,12 @@ export const events = {
    * The address itself stays in Redis. A running total is enough to know the
    * page is working, and keeps a stranger's email out of a third-party chat.
    */
-  waitlist: (r) => ["✉️ Someone asked to be kept posted", ` from: ${r.source}`, ` total on the list: ${r.total}`].join("\n"),
+  waitlist: (r) =>
+    [
+      "✉️ Someone confirmed their email",
+      ` from: ${r.source ?? "unknown"}`,
+      ` total on the list: ${r.total ?? "?"}`,
+    ].join("\n"),
 
   /**
    * The reconciler provisioning anything means a customer paid and the webhook

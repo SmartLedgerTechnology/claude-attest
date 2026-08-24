@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@noble/post-quantum": "^0.2.0",
-    "@smartledger/notaryhash": "^1.0.0"
+    "@smartledger/notaryhash": "^1.0.0",
+    "nodemailer": "^9.0.5"
   },
   "optionalDependencies": {
     "@noble/curves": "^1.4.0"

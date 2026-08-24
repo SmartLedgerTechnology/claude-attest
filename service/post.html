@@ -300,7 +300,7 @@ active time         192 min across 51 hours</pre>
       if (!r.ok) throw new Error(d.error || "Something went wrong.");
       form.hidden = true;
       signupNote.className = "signup-note good";
-      signupNote.textContent = "Thank you — you're on the list.";
+      signupNote.textContent = d.message || "Check your inbox — there's a link to confirm.";
     } catch (err) {
       signupBtn.disabled = false;
       signupBtn.textContent = "Keep me posted";

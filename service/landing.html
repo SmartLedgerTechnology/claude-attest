@@ -628,7 +628,9 @@
       if (!r.ok) throw new Error(d.error || "Something went wrong.");
       form.hidden = true;
       signupNote.className = "tiernote signup-note good";
-      signupNote.textContent = "Thank you \u2014 you're on the list. You'll hear from us when there's something real to try.";
+      // The server decides the wording: it is the only side that knows whether
+      // a confirmation was actually sent.
+      signupNote.textContent = d.message || "Check your inbox \u2014 there's a link to confirm.";
     } catch (err) {
       signupBtn.disabled = false;
       signupBtn.textContent = "Keep me posted";

@@ -26,7 +26,15 @@ import { canonicalJSON, sha256Hex } from "../packages/proof-of-process/src/canon
 import { renderVerifyPage } from "./verify-page.mjs";
 import { reconcile } from "./reconcile.mjs";
 import { Notifier, events } from "./notify.mjs";
-import { submit as submitWaitlist, makeWaitlistStore, RateLimiter, clientIp } from "./waitlist.mjs";
+import {
+  submit as submitWaitlist,
+  confirm as confirmWaitlist,
+  unsubscribe as unsubscribeWaitlist,
+  makeWaitlistStore,
+  RateLimiter,
+  clientIp,
+} from "./waitlist.mjs";
+import { makeMailer, confirmationMail } from "./mailer.mjs";
 
 const PORT = Number(process.env.PORT ?? 8788);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -79,6 +87,15 @@ const notifier = new Notifier({
   chatId: process.env.TELEGRAM_CHAT_ID,
 });
 if (notifier.enabled) console.error("notifications: telegram enabled");
+const mailer = makeMailer(process.env);
+if (mailer) {
+  // Prove the credentials and TLS at boot rather than discovering they are
+  // wrong when the first person signs up.
+  mailer
+    .verify()
+    .then(() => console.error(`mail: SMTP ready as ${mailer.from}`))
+    .catch((e) => console.error(`mail: SMTP verify FAILED — ${e?.message ?? e}`));
+}
 const stripe = makeStripeClient(SECRET_KEY);
 
 http.createServer(handle).listen(PORT, HOST, () => {
@@ -146,6 +163,11 @@ async function handle(req, res) {
       return await verifyPage(url.pathname.slice(3), res);
     }
     if (req.method === "POST" && url.pathname === "/v1/notify") return await notifyMe(req, res);
+    if (req.method === "GET" && url.pathname === "/confirm") return await confirmWaitlistPage(url, res);
+    // POST as well as GET: List-Unsubscribe one-click posts here directly.
+    if ((req.method === "GET" || req.method === "POST") && url.pathname === "/unsubscribe") {
+      return await unsubscribePage(url, res);
+    }
     if (req.method === "POST" && url.pathname === "/v1/publish") return await publish(req, res);
     if (req.method === "POST" && url.pathname === "/v1/reconcile") return await reconcileNow(req, res);
     if (req.method === "POST" && url.pathname === "/v1/stripe/webhook") return await webhook(req, res);
@@ -353,10 +375,66 @@ async function notifyMe(req, res) {
     limiter: waitlistLimiter,
     ip: clientIp(req.headers, req.socket?.remoteAddress),
   });
-  if (r.added) {
-    notifier.send("waitlist", events.waitlist({ total: r.added.total, source: r.added.source }));
+
+  if (r.sendConfirmation) {
+    const { email, token, source } = r.sendConfirmation;
+    const confirmUrl = `${PUBLIC_BASE}/confirm?t=${encodeURIComponent(token)}`;
+    if (!mailer) {
+      // Nothing will ever arrive, so do not tell them to check their inbox.
+      console.error("waitlist: SMTP not configured — cannot send confirmation");
+      return json(res, 503, { error: "Email isn't set up yet. Try again shortly." });
+    }
+    try {
+      await mailer.send({ to: email, ...confirmationMail({ confirmUrl, source }) });
+    } catch (e) {
+      // A confirmation is not best-effort: if it did not go, saying "check your
+      // inbox" would leave someone waiting for a message that does not exist.
+      console.error(`waitlist: confirmation send failed: ${e?.message ?? e}`);
+      return json(res, 502, { error: "Couldn't send the confirmation email. Try again shortly." });
+    }
   }
   return json(res, r.status, r.body);
+}
+
+/** The click in the confirmation mail. Consumes the token, so the link works once. */
+async function confirmWaitlistPage(url, res) {
+  const r = await confirmWaitlist(url.searchParams.get("t"), { store: waitlist });
+  if (r.ok && !r.alreadyConfirmed) {
+    notifier.send("waitlist", events.waitlist({ total: r.total, source: r.source }));
+  }
+  return sendHtml(
+    res,
+    r.ok ? 200 : 404,
+    r.ok
+      ? noticePage("You're on the list", "That's it — nothing else to do. You'll hear from us once, when there's something worth reading.")
+      : // Used, expired, or never valid — all three look identical from here, so
+        // the wording covers them without asserting which one it was.
+        noticePage(
+          "This link is no longer valid",
+          "Confirmation links work once and last a week. Sign up again from the home page and we'll send a fresh one."
+        )
+  );
+}
+
+/**
+ * Unsubscribe. GET so a plain click works; POST so mail clients that support
+ * one-click can do it without opening a browser at all.
+ */
+async function unsubscribePage(url, res) {
+  const r = await unsubscribeWaitlist(url.searchParams.get("t"), { store: waitlist });
+  if (!r.ok) {
+    return sendHtml(res, 404, noticePage(
+      "That link isn't valid",
+      "If you're still receiving mail from us, reply to it and we'll sort it out by hand."
+    ));
+  }
+  // A spent token and a token that never existed are indistinguishable — both
+  // are simply absent. So the wording has to be true of either: saying
+  // "removed" would be a claim we cannot support, and this page belongs to a
+  // product whose whole argument is against those.
+  return sendHtml(res, 200, r.removed
+    ? noticePage("Removed", "Your address is gone from the list. Nothing further will be sent.")
+    : noticePage("You're not on the list", "This address isn't subscribed, so there is nothing to remove and nothing further will be sent."));
 }
 
 /** Map a webhook outcome onto a notification, where one is warranted. */
@@ -597,6 +675,43 @@ async function readJson(req) {
   } catch {
     return {};
   }
+}
+
+function sendHtml(res, code, html) {
+  res.writeHead(code, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "referrer-policy": "no-referrer" });
+  res.end(html);
+}
+
+/**
+ * A one-message page for confirm and unsubscribe. Inlined rather than given its
+ * own template file: it carries one heading and one sentence, and a reader
+ * arriving here from an email wants an answer, not a website.
+ */
+function noticePage(heading, detail) {
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${esc(heading)} — ProofOfProcess.ai</title>
+<style>
+  body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;line-height:1.65;
+    color:#f4f8fb;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:radial-gradient(circle at 20% 10%,rgba(95,140,255,.16),transparent 34%),
+      linear-gradient(180deg,#07111f,#06101a 55%,#08131f)}
+  .card{width:min(520px,100%);text-align:center;padding:38px 30px;border-radius:22px;
+    border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.045)}
+  .brand{font-weight:800;letter-spacing:-.03em;margin-bottom:22px}
+  .brand span{color:#65e6ff}
+  h1{font-size:1.6rem;letter-spacing:-.03em;margin:0 0 12px}
+  p{color:#9fb0c4;margin:0 0 22px}
+  a{color:#65e6ff;text-decoration:none;font-weight:700}
+</style></head>
+<body><div class="card">
+  <div class="brand">ProofOfProcess<span>.ai</span></div>
+  <h1>${esc(heading)}</h1>
+  <p>${esc(detail)}</p>
+  <a href="/">Back to the site</a>
+</div></body></html>`;
 }
 
 function json(res, code, obj) {
