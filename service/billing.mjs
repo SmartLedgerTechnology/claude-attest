@@ -238,6 +238,7 @@ async function publish(req, res) {
     published.set(digest, payload);
     if (body?.notaryHashId) publishedAlias.set(body.notaryHashId, digest);
   }
+  verifyCache.delete(digest);
   notifier.send("published", events.published({ url: `${PUBLIC_BASE}/v/${digest}` }));
   return json(res, 200, { id: digest, url: `${PUBLIC_BASE}/v/${digest}` });
 }
@@ -273,13 +274,51 @@ async function loadPublished(id) {
   return rec ? JSON.parse(rec) : null;
 }
 
+/**
+ * Rendered verify pages, cached briefly.
+ *
+ * Verification is CPU-bound: each page runs two ML-DSA-65 checks (the creator's
+ * certificate and the platform countersignature), which on a single vCPU caps
+ * throughput around 30 requests/second. The expected traffic shape is one link
+ * shared to many readers, so re-verifying identical bytes for every viewer
+ * burns the whole CPU budget on the same answer.
+ *
+ * The cache is short-lived on purpose. We still re-verify from the stored bytes
+ * on a schedule rather than trusting a verdict frozen at publish time — a
+ * tampered store is caught within the TTL, not never.
+ */
+const VERIFY_TTL_MS = Number(process.env.VERIFY_CACHE_MS ?? 60_000);
+const verifyCache = new Map();
+
+function cachedPage(id) {
+  const hit = verifyCache.get(id);
+  if (!hit) return null;
+  if (Date.now() > hit.expires) { verifyCache.delete(id); return null; }
+  return hit;
+}
+
+function cachePage(id, status, html) {
+  // Bounded so a flood of unknown ids cannot grow this without limit.
+  if (verifyCache.size > 500) verifyCache.clear();
+  verifyCache.set(id, { status, html, expires: Date.now() + VERIFY_TTL_MS });
+}
+
 async function verifyPage(id, res) {
-  const html = async (code, body) => {
+  const send = (code, body) => {
     res.writeHead(code, { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=60" });
     res.end(body);
   };
-  const rec = await loadPublished(decodeURIComponent(id || ""));
-  if (!rec) return html(404, renderVerifyPage({ id, notFound: true }));
+  const key = decodeURIComponent(id || "");
+
+  const hit = cachedPage(key);
+  if (hit) return send(hit.status, hit.html);
+
+  const rec = await loadPublished(key);
+  if (!rec) {
+    const body = renderVerifyPage({ id, notFound: true });
+    cachePage(key, 404, body);
+    return send(404, body);
+  }
 
   // Verified here, on every request, from the stored bytes — never trusting a
   // verdict cached at publish time.
@@ -287,7 +326,9 @@ async function verifyPage(id, res) {
     { header: rec.header, certificate: rec.certificate, countersignatures: rec.countersignatures },
     { checkChain: true }
   );
-  return html(200, renderVerifyPage({ id: rec.id, report, header: rec.header, certificate: rec.certificate, publishedAt: rec.publishedAt }));
+  const body = renderVerifyPage({ id: rec.id, report, header: rec.header, certificate: rec.certificate, publishedAt: rec.publishedAt });
+  cachePage(key, 200, body);
+  return send(200, body);
 }
 
 /** Map a webhook outcome onto a notification, where one is warranted. */
