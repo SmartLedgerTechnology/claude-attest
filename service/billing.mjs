@@ -49,6 +49,7 @@ const OPERATOR_KEYS = new Set(
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const WELCOME_HTML = fs.readFileSync(path.join(HERE, "welcome.html"), "utf8");
 const LANDING_HTML = fs.readFileSync(path.join(HERE, "landing.html"), "utf8");
+const POST_HTML = fs.readFileSync(path.join(HERE, "post.html"), "utf8");
 
 // Price → tier, keyed by LOOKUP KEY because price ids differ between test and
 // live. Explicit price ids can be added via env for prices without one.
@@ -123,6 +124,12 @@ async function handle(req, res) {
     if (req.method === "GET" && (url.pathname === "/" || url.pathname === "/index.html")) {
       res.writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300" });
       return res.end(LANDING_HTML);
+    }
+    // The launch write-up. Lives on our own domain rather than a third-party
+    // host so the story, the product and the proof all sit behind one name.
+    if (req.method === "GET" && (url.pathname === "/post" || url.pathname === "/launch")) {
+      res.writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300" });
+      return res.end(POST_HTML);
     }
     // Served from this origin so the page's /v1/claim call is same-origin —
     // no CORS, and the key never crosses a domain boundary it needn't.
