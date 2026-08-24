@@ -61,7 +61,7 @@ argue the other side.
 ## Install
 
 ```bash
-/plugin marketplace add codenlighten/claude-attest
+/plugin marketplace add SmartLedgerTechnology/claude-attest
 /plugin install claude-attest@smartledger
 ```
 

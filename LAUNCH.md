@@ -123,9 +123,9 @@ obligation — a publisher, a university, an agency with a contract clause. You
 have the problem this exists for, and I'd rather hear your objections than guess.
 
 ```
-Plugin:  /plugin marketplace add codenlighten/claude-attest
+Plugin:  /plugin marketplace add SmartLedgerTechnology/claude-attest
          /plugin install claude-attest@smartledger
-Source:  https://github.com/codenlighten/claude-attest
+Source:  https://github.com/SmartLedgerTechnology/claude-attest
 Site:    https://proofofprocess.ai
 ```
 
@@ -192,7 +192,7 @@ never your content.
 
 Free tier: full local capture and tamper-evidence, no account.
 
-https://github.com/codenlighten/claude-attest
+https://github.com/SmartLedgerTechnology/claude-attest
 
 **7/**
 It has no users yet. I'd rather hear why you wouldn't use it than guess.
