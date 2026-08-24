@@ -60,6 +60,31 @@
   footer{margin-top:3.5rem;padding-top:1.6rem;border-top:1px solid var(--line);
          font-family:ui-sans-serif,system-ui,sans-serif;font-size:.9rem;color:var(--muted)}
   footer a{display:inline-block;margin-right:1.2rem}
+
+  /* Inline at the foot of the piece, after the argument is made — not a modal. */
+  .keepposted{margin-top:3rem;padding:1.6rem 1.7rem;border:1px solid var(--line);
+              border-radius:14px;background:var(--panel);
+              font-family:ui-sans-serif,system-ui,sans-serif}
+  .keepposted h3{margin:0 0 .6rem;font-size:1.05rem;color:var(--text)}
+  .keepposted p{font-size:.92rem;margin-bottom:1rem;color:var(--muted)}
+  .signup{display:flex;gap:.6rem;flex-wrap:wrap}
+  /* Outranks the UA stylesheet's [hidden]{display:none}; without it the form
+     stays visible with a stuck "Sending…" button after a successful submit. */
+  .signup[hidden]{display:none}
+  .field{flex:1 1 240px;min-width:0;background:rgba(255,255,255,.05);
+         border:1px solid var(--line);border-radius:8px;padding:.7rem .9rem;
+         color:var(--text);font:inherit;font-size:.92rem}
+  .field::placeholder{color:#7a8da0}
+  .field:focus{outline:none;border-color:rgba(101,230,255,.5)}
+  .submit{border:1px solid rgba(101,230,255,.3);background:rgba(101,230,255,.1);
+          color:var(--cyan);border-radius:8px;padding:.7rem 1.1rem;
+          font:inherit;font-size:.92rem;font-weight:600;cursor:pointer}
+  .submit:hover{background:rgba(101,230,255,.16)}
+  .submit:disabled{opacity:.6;cursor:default}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  .signup-note{font-size:.85rem;margin:.9rem 0 0;min-height:1px}
+  .signup-note.good{color:var(--green)}
+  .signup-note.bad{color:#ff8f8f}
 </style>
 </head>
 <body>
@@ -225,11 +250,64 @@ active time         192 min across 51 hours</pre>
     nothing leaving your machine. Anchoring is the paid part.
   </p>
 
+  <div class="keepposted">
+    <h3>Not ready to install?</h3>
+    <p>
+      Leave an address and I&rsquo;ll write once, when there is something worth trying &mdash;
+      independent witnessing, or capture adapters beyond Claude Code. No drip sequence, no
+      tracking pixels, never shared. Ask at hello@proofofprocess.ai and it is deleted.
+    </p>
+    <form class="signup" id="signupForm" novalidate>
+      <input class="field" type="email" id="signupEmail" name="email"
+             placeholder="you@example.com" autocomplete="email" required
+             aria-label="Your email address" />
+      <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <button class="submit" type="submit" id="signupBtn">Keep me posted</button>
+    </form>
+    <p class="signup-note" id="signupNote"></p>
+  </div>
+
   <footer>
     <a href="https://github.com/SmartLedgerTechnology/claude-attest">Source on GitHub</a>
     <a href="/">ProofOfProcess.ai</a>
     <a href="/v/bac396056f98571f097661346e3b5852f5de2f28c43296ea6f8e36293cab8531">The receipt</a>
   </footer>
 </div>
+<script>
+  // Same-origin: this page and /v1/notify are both served through the apex, so
+  // there is no CORS and no third-party form service between a reader and us.
+  const form = document.getElementById("signupForm");
+  const emailField = document.getElementById("signupEmail");
+  const signupBtn = document.getElementById("signupBtn");
+  const signupNote = document.getElementById("signupNote");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = emailField.value.trim();
+    if (!email) { emailField.focus(); return; }
+
+    signupBtn.disabled = true;
+    signupBtn.textContent = "Sending…";
+    signupNote.className = "signup-note";
+
+    try {
+      const r = await fetch("/v1/notify", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email, company: form.company.value, source: "post" })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Something went wrong.");
+      form.hidden = true;
+      signupNote.className = "signup-note good";
+      signupNote.textContent = "Thank you — you're on the list.";
+    } catch (err) {
+      signupBtn.disabled = false;
+      signupBtn.textContent = "Keep me posted";
+      signupNote.className = "signup-note bad";
+      signupNote.textContent = (err && err.message) || "Couldn't save that — email hello@proofofprocess.ai instead.";
+    }
+  });
+</script>
 </body>
 </html>

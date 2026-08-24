@@ -26,6 +26,7 @@ import { canonicalJSON, sha256Hex } from "../packages/proof-of-process/src/canon
 import { renderVerifyPage } from "./verify-page.mjs";
 import { reconcile } from "./reconcile.mjs";
 import { Notifier, events } from "./notify.mjs";
+import { submit as submitWaitlist, makeWaitlistStore, RateLimiter, clientIp } from "./waitlist.mjs";
 
 const PORT = Number(process.env.PORT ?? 8788);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -144,6 +145,7 @@ async function handle(req, res) {
     if (req.method === "GET" && url.pathname.startsWith("/v/")) {
       return await verifyPage(url.pathname.slice(3), res);
     }
+    if (req.method === "POST" && url.pathname === "/v1/notify") return await notifyMe(req, res);
     if (req.method === "POST" && url.pathname === "/v1/publish") return await publish(req, res);
     if (req.method === "POST" && url.pathname === "/v1/reconcile") return await reconcileNow(req, res);
     if (req.method === "POST" && url.pathname === "/v1/stripe/webhook") return await webhook(req, res);
@@ -329,6 +331,32 @@ async function verifyPage(id, res) {
   const body = renderVerifyPage({ id: rec.id, report, header: rec.header, certificate: rec.certificate, publishedAt: rec.publishedAt });
   cachePage(key, 200, body);
   return send(200, body);
+}
+
+/* ------------------------------ keep-me-posted ---------------------------- */
+
+/**
+ * One inline field at the foot of the landing page and the launch write-up, for
+ * someone who is interested but not ready to install. The rules live in
+ * waitlist.mjs; this is only the HTTP wiring.
+ *
+ * The address goes to Redis and nowhere else — notably not into the Telegram
+ * alert, which carries a running total instead.
+ */
+const waitlist = makeWaitlistStore(redis);
+const waitlistLimiter = new RateLimiter({ max: Number(process.env.NOTIFY_MAX_PER_HOUR ?? 5) });
+
+async function notifyMe(req, res) {
+  const body = await readJson(req);
+  const r = await submitWaitlist(body, {
+    store: waitlist,
+    limiter: waitlistLimiter,
+    ip: clientIp(req.headers, req.socket?.remoteAddress),
+  });
+  if (r.added) {
+    notifier.send("waitlist", events.waitlist({ total: r.added.total, source: r.added.source }));
+  }
+  return json(res, r.status, r.body);
 }
 
 /** Map a webhook outcome onto a notification, where one is warranted. */

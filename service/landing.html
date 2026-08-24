@@ -213,6 +213,56 @@
     }
     .tiernote{color:var(--muted);font-size:.82rem;margin:.7rem 0 0;line-height:1.5}
   #pricing .tier h3{font-size:2rem;letter-spacing:-.03em}
+
+    /* The free front door. It is the first thing a visitor can actually do, so
+       it sits in the hero rather than three screens down. */
+    .install{
+      margin:30px auto 0;max-width:720px;text-align:left;
+      border:1px solid rgba(101,230,255,.22);border-radius:20px;
+      background:rgba(101,230,255,.045);padding:18px 20px;
+    }
+    .install-head{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;
+    }
+    .tag{
+      font-size:.7rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+      color:#c9f8ff;border:1px solid rgba(101,230,255,.28);border-radius:999px;padding:5px 10px;
+    }
+    .install-head small{color:var(--muted);font-size:.84rem}
+    .install-row{display:flex;gap:12px;align-items:stretch}
+    .cmd{
+      flex:1;margin:0;overflow-x:auto;
+      font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+      font-size:.84rem;line-height:1.75;color:#cfe6f5;
+      background:#040a12;border:1px solid var(--line);border-radius:12px;padding:13px 15px;
+    }
+    .cmd code{white-space:pre;display:block}
+    .btn.copy{padding:12px 16px;font-size:.86rem;flex:0 0 auto}
+
+    /* Inline, at the foot of the page, after the argument has been made.
+       Never a modal — see the reasoning in the commit that added it. */
+    .signup{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 auto;max-width:520px}
+    /* A `display` rule here outranks the UA stylesheet's [hidden]{display:none},
+       so hiding the form on success needs saying explicitly — without this the
+       form stays on screen with a stuck "Sending…" button after it worked. */
+    .signup[hidden]{display:none}
+    .field{
+      flex:1 1 240px;min-width:0;
+      background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.15);
+      color:var(--text);border-radius:999px;padding:12px 18px;font-size:.95rem;
+      font-family:inherit;
+    }
+    .field::placeholder{color:#7a8da0}
+    .field:focus{outline:none;border-color:rgba(101,230,255,.5);background:rgba(255,255,255,.08)}
+    .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+    .signup-note{max-width:560px;margin:16px auto 0;text-align:center}
+    .signup-note.good{color:#a9f4d3}
+    .signup-note.bad{color:#ff8f8f}
+
+    @media(max-width:560px){
+      .install-row{flex-direction:column}
+      .btn.copy{width:100%}
+    }
 </style>
 </head>
 <body>
@@ -237,9 +287,23 @@
         review, revision, approval, and decision-making across AI-assisted and digital workflows.
       </p>
       <div class="hero-actions">
-        <a class="btn primary" href="#how">See the process</a>
-        <a class="btn" href="#pricing">See pricing</a>
+        <a class="btn primary" href="#install">Start capturing — free</a>
+        <a class="btn" href="#how">See how it works</a>
+        <a class="btn" href="#pricing">Pricing</a>
       </div>
+
+      <div class="install" id="install">
+        <div class="install-head">
+          <span class="tag">Claude Code plugin</span>
+          <small>Two lines in your terminal. No account, no card, nothing leaves your machine.</small>
+        </div>
+        <div class="install-row">
+          <pre class="cmd"><code id="installCmd">/plugin marketplace add SmartLedgerTechnology/claude-attest
+/plugin install claude-attest@smartledger</code></pre>
+          <button class="btn copy" id="copyInstall" type="button">Copy</button>
+        </div>
+      </div>
+
       <div class="micro">Don’t just prove the result. Prove the process.</div>
 
       <div class="proof-board reveal">
@@ -439,13 +503,20 @@
           <div class="kicker">ProofOfProcess.ai</div>
           <h2>Don’t just prove the result. <span class="gradient">Prove the process.</span></h2>
           <p>
-            Build verifiable human-participation evidence into AI systems, creative tools,
-            software workflows, research pipelines, and physical processes.
+            Independent witnessing (Level&nbsp;3) and capture adapters beyond Claude Code are next.
+            Leave an address and you’ll hear from us once, when there’s something real to try.
           </p>
-          <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
-            <a class="btn primary" href="mailto:hello@proofofprocess.ai">Contact ProofOfProcess</a>
-            <a class="btn" href="#top">Back to top</a>
-          </div>
+          <form class="signup" id="signupForm" novalidate>
+            <input class="field" type="email" id="signupEmail" name="email"
+                   placeholder="you@example.com" autocomplete="email" required
+                   aria-label="Your email address" />
+            <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button class="btn primary" type="submit" id="signupBtn">Keep me posted</button>
+          </form>
+          <p class="tiernote signup-note" id="signupNote">
+            One email when there is something worth reading. No drip sequence, no tracking pixels,
+            and the address is never shared or sold. Ask at hello@proofofprocess.ai and it’s deleted.
+          </p>
         </div>
       </div>
     </section>
@@ -454,6 +525,11 @@
   <div class="wrap">
     <footer>
       <div>© 2026 ProofOfProcess.ai</div>
+      <div>
+        <a href="/post">Why this exists</a> ·
+        <a href="https://github.com/SmartLedgerTechnology/claude-attest" rel="noopener">Source</a> ·
+        <a href="mailto:hello@proofofprocess.ai">hello@proofofprocess.ai</a>
+      </div>
       <div>Integrity · Identity · Time · Authority · Disclosure</div>
     </footer>
   </div>
@@ -488,6 +564,76 @@
     } catch (e) {
       btn.disabled = false; btn.textContent = "Subscribe";
       note.textContent = "Couldn't open checkout \u2014 please try again, or email hello@proofofprocess.ai";
+    }
+  });
+</script>
+<script>
+  // Copy the install lines. navigator.clipboard needs a secure context, which we
+  // have, but a selection-based fallback keeps this working over plain http and
+  // in older browsers rather than silently doing nothing.
+  //
+  // The timeout is not belt-and-braces. writeText() does not reject when the
+  // document is hidden — it returns a promise that never settles at all, so an
+  // ordinary try/catch would await forever and the button would look dead.
+  // Racing it against a timer is what guarantees the fallback actually runs.
+  const copyBtn = document.getElementById("copyInstall");
+  const cmd = document.getElementById("installCmd");
+  const withTimeout = (p, ms) =>
+    Promise.race([p, new Promise((_, reject) => setTimeout(() => reject(new Error("clipboard timed out")), ms))]);
+
+  copyBtn?.addEventListener("click", async () => {
+    const text = cmd.innerText;
+    let ok = false;
+    try {
+      await withTimeout(navigator.clipboard.writeText(text), 1000);
+      ok = true;
+    } catch {
+      try {
+        const sel = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(cmd);
+        sel.removeAllRanges(); sel.addRange(range);
+        ok = document.execCommand("copy");
+        sel.removeAllRanges();
+      } catch { ok = false; }
+    }
+    copyBtn.textContent = ok ? "Copied" : "Select and copy";
+    setTimeout(() => { copyBtn.textContent = "Copy"; }, 2200);
+  });
+</script>
+<script>
+  // Keep-me-posted. Same-origin, so no CORS and no third-party form service
+  // sitting between a visitor and us.
+  const form = document.getElementById("signupForm");
+  const emailField = document.getElementById("signupEmail");
+  const signupBtn = document.getElementById("signupBtn");
+  const signupNote = document.getElementById("signupNote");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = emailField.value.trim();
+    if (!email) { emailField.focus(); return; }
+
+    signupBtn.disabled = true;
+    signupBtn.textContent = "Sending\u2026";
+    signupNote.className = "tiernote signup-note";
+
+    try {
+      const r = await fetch("/v1/notify", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email, company: form.company.value, source: "landing" })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "Something went wrong.");
+      form.hidden = true;
+      signupNote.className = "tiernote signup-note good";
+      signupNote.textContent = "Thank you \u2014 you're on the list. You'll hear from us when there's something real to try.";
+    } catch (err) {
+      signupBtn.disabled = false;
+      signupBtn.textContent = "Keep me posted";
+      signupNote.className = "tiernote signup-note bad";
+      signupNote.textContent = (err && err.message) || "Couldn't save that \u2014 email hello@proofofprocess.ai instead.";
     }
   });
 </script>
