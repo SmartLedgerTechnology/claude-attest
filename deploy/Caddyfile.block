@@ -22,3 +22,52 @@ countersign.notaryhash.com {
 		reverse_proxy pop-countersigner:8787
 	}
 }
+
+countersign.proofofprocess.ai {
+	encode gzip
+	reverse_proxy pop-countersigner:8787
+}
+
+www.proofofprocess.ai {
+	redir https://proofofprocess.ai{uri} permanent
+}
+
+api.proofofprocess.ai {
+	encode gzip
+	reverse_proxy pop-billing:8788
+}
+
+# Apex. Reverse-proxy only for now — adding a static root would require a new
+# volume mount on Caddy, which means recreating the container and a brief
+# outage for every site it fronts. The landing page can wait for a chosen
+# moment; the success page cannot.
+proofofprocess.ai {
+	encode gzip
+
+	# The key-delivery page and the call it makes, same-origin.
+	handle /welcome* {
+		reverse_proxy pop-billing:8788
+	}
+	handle /v1/claim* {
+		reverse_proxy pop-billing:8788
+	}
+	handle /v1/checkout* {
+		reverse_proxy pop-billing:8788
+	}
+	handle /v1/pubkey* {
+		reverse_proxy pop-countersigner:8787
+	}
+
+	# Every C2PA assertion we have issued points at /v/<id>. A bare 404 would
+	# read as a broken proof rather than an unbuilt feature.
+	handle /v/* {
+		reverse_proxy pop-billing:8788
+	}
+	handle /v1/publish* {
+		reverse_proxy pop-billing:8788
+	}
+
+	handle {
+		reverse_proxy pop-billing:8788
+	}
+}
