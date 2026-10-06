@@ -133,6 +133,11 @@ export async function refreshCertificate(attestation, config) {
           `(${certificate.payloadHash?.slice(0, 16)}… vs ${attestation.certificate?.payloadHash?.slice(0, 16)}…)`,
       };
     }
+    // And under the same key: the payload hash says what was signed, not by whom.
+    if (certificate.publicKey !== attestation.certificate?.publicKey) {
+      return { ok: false, error: "refused: fetched certificate is signed by a different key" };
+    }
+    // `confirmed` is the certificate's own claim. The caller verifies it.
     return { ok: true, certificate, confirmed: certificate.anchor?.blockHeight != null };
   } catch (e) {
     debugLog(`refreshCertificate failed: ${e.message}`);

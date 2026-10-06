@@ -87,7 +87,9 @@ async function derivePublicKey(algorithm, seed) {
 export async function signDigest(id, digestHex) {
   const seed = Buffer.from(id.privateKey, "base64");
   const digest = Buffer.from(digestHex, "hex");
-  const createdAt = new Date().toISOString();
+  // Whole seconds: NotaryHash's canonical form is YYYY-MM-DDTHH:MM:SS.000Z, and
+  // its verifier refuses a certificate whose createdAt is written any other way.
+  const createdAt = new Date(Math.floor(Date.now() / 1000) * 1000).toISOString();
 
   if (id.algorithm === "ECDSA-secp256k1") {
     const { secp256k1 } = await import("@noble/curves/secp256k1");

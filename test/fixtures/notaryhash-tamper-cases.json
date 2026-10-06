@@ -1,0 +1,2047 @@
+{
+ "about": "Single-field tampers of one real NotaryHash batch certificate (BSV mainnet block 954784), each with the verdict of the NotaryHash verifier at master 18b2e10. T00 and T04 should be accepted; every other case should be refused. Verdicts were computed against the seven pinned mainnet headers in \"blocks\", which rebuild to their hashes.",
+ "source": "A real batch anchor made by this service on BSV mainnet (tx d0dfc328…, block 954784, 2026-06-23 smoke run). The SPV envelope, that block header and the six after it were fetched from WhatsOnChain on 2026-09-28. All data is public on-chain.",
+ "blocks": [
+  {
+   "hash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+   "height": 954784,
+   "version": 973078528,
+   "previousblockhash": "0000000000000000005f740ac511d72fe7ed9552e72a03c3a00391800cda7bfa",
+   "merkleroot": "8303a29cb3637dd946f676b04ded9c1db596ef41068e8c744aa474b374d8a9b6",
+   "time": 1782209816,
+   "bits": "182afffe",
+   "nonce": 463748636
+  },
+  {
+   "hash": "0000000000000000139964554bd2209ae3ff64a282511c466e938478a2ab420a",
+   "height": 954785,
+   "version": 557703168,
+   "previousblockhash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+   "merkleroot": "f409d65d7ee4c3fcdef697d93b602c11b568418a7ea711a59b1f7438aa277222",
+   "time": 1782209940,
+   "bits": "182b3efd",
+   "nonce": 3562424593
+  },
+  {
+   "hash": "000000000000000003f2cc416efaf1f3640b888bdceba36a4e513178437d5bac",
+   "height": 954786,
+   "version": 564797440,
+   "previousblockhash": "0000000000000000139964554bd2209ae3ff64a282511c466e938478a2ab420a",
+   "merkleroot": "daf66dba4779b18f50fd763268530c795b3b4902408627847bee4a4fd1dc04a5",
+   "time": 1782209960,
+   "bits": "182bc02f",
+   "nonce": 3683927144
+  },
+  {
+   "hash": "00000000000000001713c9019703e37fc06867b219f2a71ddb6955f24c863cc0",
+   "height": 954787,
+   "version": 838860800,
+   "previousblockhash": "000000000000000003f2cc416efaf1f3640b888bdceba36a4e513178437d5bac",
+   "merkleroot": "905f0ca8b5d5467b6fae39390a2c6e4c3c9c7fd1a387c263adf51a60d6fb793c",
+   "time": 1782210064,
+   "bits": "182b78b1",
+   "nonce": 2342382020
+  },
+  {
+   "hash": "000000000000000010b1feadaaadfc2c80df1ecc1b12a6b1af8d693006c8f3c3",
+   "height": 954788,
+   "version": 538968064,
+   "previousblockhash": "00000000000000001713c9019703e37fc06867b219f2a71ddb6955f24c863cc0",
+   "merkleroot": "750ad7401123907eab28b55624c0938c0ed727fb3597d7565283099d90b65f4a",
+   "time": 1782210360,
+   "bits": "182b3911",
+   "nonce": 4057044032
+  },
+  {
+   "hash": "000000000000000021e01a7cd246b1902440d7a4d24ae00e36527d7fff82d28b",
+   "height": 954789,
+   "version": 634871808,
+   "previousblockhash": "000000000000000010b1feadaaadfc2c80df1ecc1b12a6b1af8d693006c8f3c3",
+   "merkleroot": "0860c754056a402b86ba9c7f3e14b60028a19552be800e5d8634d4492787d2a9",
+   "time": 1782210674,
+   "bits": "182b3273",
+   "nonce": 1710761365
+  },
+  {
+   "hash": "00000000000000001d5ccd3f8dc41394e79a788a8d82381e2d413adcb1c3d308",
+   "height": 954790,
+   "version": 805306368,
+   "previousblockhash": "000000000000000021e01a7cd246b1902440d7a4d24ae00e36527d7fff82d28b",
+   "merkleroot": "a932f93562fe4338d1c12f6ea059132169394ae9ff49fe76f8c1c2ff7f26b78a",
+   "time": 1782212244,
+   "bits": "182b2608",
+   "nonce": 85021637
+  }
+ ],
+ "cases": [
+  {
+   "id": "T00",
+   "rule": "control",
+   "change": "none: the certificate as issued",
+   "notaryhash": {
+    "verdict": "accept",
+    "ok": true,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "valid",
+    "reasons": []
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T01",
+   "rule": "anchor.blockTime must equal the header time",
+   "change": "anchor.blockTime + 3600",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: anchor.blockTime 1782213416 is not the block's time 1782209816"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782213416
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T02",
+   "rule": "anchor.blockTime must equal the header time",
+   "change": "anchor.blockTime - 100000000 (three years earlier)",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: anchor.blockTime 1682209816 is not the block's time 1782209816"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1682209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T03",
+   "rule": "anchor.blockHeight must equal spv.blockHeight",
+   "change": "anchor.blockHeight - 1000",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: anchor.blockHeight 953784 is not the proof's block height 954784"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 953784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T04",
+   "rule": "null block fields are not a claim",
+   "change": "anchor.blockTime and anchor.blockHeight set to null (spv kept)",
+   "notaryhash": {
+    "verdict": "accept",
+    "ok": true,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "valid",
+    "reasons": []
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": null,
+     "blockTime": null
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T05",
+   "rule": "record read from anchor.vout only",
+   "change": "anchor.vout = 1 (a payment output; the record is at 0)",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: output 1 of the raw tx is not an OP_FALSE OP_RETURN record"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 1,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T06",
+   "rule": "record read from anchor.vout only",
+   "change": "anchor.vout = 99 (past the last output)",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: output 99 of the raw tx is not an OP_FALSE OP_RETURN record"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 99,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T07",
+   "rule": "TSC index must fit the path",
+   "change": "spv.merkleProof.index + 2^(nodes+3)",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: the Merkle proof is malformed: Error: Merkle index 16903 does not fit a path of 11 nodes"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 16903,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T08",
+   "rule": "TSC index must fit the path",
+   "change": "spv.merkleProof.index = -1",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: the Merkle proof is malformed: Error: Merkle index is not a non-negative integer"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": -1,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T09",
+   "rule": "TSC node must be 32 bytes",
+   "change": "first node truncated to 31 bytes",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: the Merkle proof is malformed: Error: Merkle node is not 32 bytes"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T10",
+   "rule": "TSC proof must fold to the header root",
+   "change": "one hex digit of the first node changed",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: the Merkle proof does not fold to the block Merkle root"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "ad7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T11",
+   "rule": "TSC proof must fold to the header root",
+   "change": "last node dropped (path one short)",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: the Merkle proof does not fold to the block Merkle root"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T12",
+   "rule": "raw tx of 64 bytes or fewer refused",
+   "change": "spv.rawTx cut to its first 64 bytes",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: the raw tx is too short to be a transaction"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe0",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T13",
+   "rule": "raw tx must hash to anchor.txid",
+   "change": "one hex digit of spv.rawTx changed (in the locktime)",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: raw tx does not hash to the anchor txid"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac0000000a",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T14",
+   "rule": "merkle.leafIndex must match the path shape",
+   "change": "merkle.leafIndex moved to the next leaf (mod leafCount)",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: the on-chain record does not match the certificate"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 1,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T15",
+   "rule": "merkle.leafIndex must match the path shape",
+   "change": "merkle.leafIndex = leafCount (out of range)",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: the on-chain record does not match the certificate"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 4,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T16",
+   "rule": "merkle.leafCount must equal the on-chain count",
+   "change": "merkle.leafCount + 1",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: the on-chain record does not match the certificate"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 5,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T17",
+   "rule": "batch path must reconstruct the on-chain root",
+   "change": "one hex digit of merkle.root changed",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "merkle audit path does not reconstruct the stated root",
+     "SPV: the on-chain record does not match the certificate"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "abb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T18",
+   "rule": "batch path sides are fixed by leafIndex",
+   "change": "side of the first path node swapped left/right",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "merkle audit path does not reconstruct the stated root",
+     "SPV: the on-chain record does not match the certificate"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "left"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T19",
+   "rule": "createdAt must be the canonical .000Z form",
+   "change": "createdAt .000Z -> .123Z",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": false,
+    "anchorStatus": "valid",
+    "reasons": [
+     "Error: invalid createdAt: not the canonical YYYY-MM-DDTHH:MM:SS.000Z form"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.123Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T20",
+   "rule": "createdAt must be the canonical .000Z form",
+   "change": "createdAt .000Z -> Z",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": false,
+    "anchorStatus": "valid",
+    "reasons": [
+     "Error: invalid createdAt: not the canonical YYYY-MM-DDTHH:MM:SS.000Z form"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T21",
+   "rule": "createdAt enters the proof hash",
+   "change": "createdAt + 1 second (canonical form kept)",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": false,
+    "anchorStatus": "valid",
+    "reasons": [
+     "proofHash does not match canonical proof bytes"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:05.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T22",
+   "rule": "payloadHash is signed and enters the proof hash",
+   "change": "one hex digit of payloadHash changed",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": false,
+    "proofHashValid": false,
+    "anchorStatus": "valid",
+    "reasons": [
+     "signature verification failed"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "aba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T23",
+   "rule": "proofHash must be recomputed",
+   "change": "one hex digit of proofHash changed",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": false,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "proofHash does not match canonical proof bytes",
+     "SPV: the on-chain record does not match the certificate"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "a0108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T24",
+   "rule": "signature must verify",
+   "change": "one hex digit near the end of signature changed",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": false,
+    "proofHashValid": false,
+    "anchorStatus": "valid",
+    "reasons": [
+     "signature verification failed"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141ca12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T25",
+   "rule": "block must be the named one",
+   "change": "spv.blockHash replaced by the next block (a real main-chain block)",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: block 0000000000000000139964554bd2209ae3ff64a282511c466e938478a2ab420a is at height 954785, not 954784"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954784,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "0000000000000000139964554bd2209ae3ff64a282511c466e938478a2ab420a",
+     "blockHeight": 954784,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  },
+  {
+   "id": "T26",
+   "rule": "block height must be the block's",
+   "change": "spv.blockHeight and anchor.blockHeight both + 1",
+   "notaryhash": {
+    "verdict": "refuse",
+    "ok": false,
+    "signatureValid": true,
+    "proofHashValid": true,
+    "anchorStatus": "invalid",
+    "reasons": [
+     "SPV: block 000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c is at height 954784, not 954785"
+    ]
+   },
+   "certificate": {
+    "protocol": "NotaryHash",
+    "version": "1.0",
+    "mode": "full",
+    "algorithm": "ECDSA-secp256k1",
+    "hashAlgorithm": "SHA-256",
+    "payloadHash": "2ba62ec2e81849e880c2b615f5d2cf071a55b72bbb42cc1f4840de1acd0574eb",
+    "publicKey": "026b179f3c40f3db07d6d4ceea027dbb7d6da883b8913d51194cdce1061a6c89c3",
+    "signature": "0926f912f1b2d993f42e0b4cc1f60a2948f5de49f3f338a95b0cbdfb7f7b73e40504d0aca299cd7be52c2ffd079bc2b4069f116234b177c01be808ac2141cf12",
+    "encoding": "hex",
+    "proofHash": "40108dad1616a6fb0510b980ae546c656a8414a17dec1415fdac73a47264e05c",
+    "createdAt": "2026-06-23T10:06:04.000Z",
+    "anchor": {
+     "type": "batch",
+     "network": "bsv-mainnet",
+     "txid": "d0dfc32896b4b5014139eb5cbd6d303243c357aeeb346d6c523fd9eee8a31657",
+     "vout": 0,
+     "blockHeight": 954785,
+     "blockTime": 1782209816
+    },
+    "merkle": {
+     "root": "7bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e",
+     "leafIndex": 0,
+     "leafCount": 4,
+     "path": [
+      {
+       "hash": "a7d41bbd00f466e32cb9adf897fa91b3b19608a50338c24dc26a6479ac713b10",
+       "side": "right"
+      },
+      {
+       "hash": "608ea7a0b1ab240ba70daf7f1b7c2d0da1a8166ce3bdf9370f2393c114714e73",
+       "side": "right"
+      }
+     ]
+    },
+    "spv": {
+     "rawTx": "0100000001c81b9501dbf2ac9653739836169b5d1bc4c02632e537f655a4d3d7d0809e5574010000006a47304402202318b0a2815e871e8fab347038f2bc1fe07b33dfbfffb65cb5f87f3558daa5a00220632e36fffb8356a8f04674ad5a6158165e77481360136414059f41d8447de06b4121020bb8737158ca7c6d28176b433d8b4b182658697a2f3d026280437de161e82124ffffffff02000000000000000037006a0a4e4f544152594841534801010102207bb623d4a1217ab215fd236afdf9c59733bc3e6ea1e7bd72b38167141c7c566e04000000040dc30000000000001976a9143bc6821455c4dc7041dd4046039fb0b2e3b5cee388ac00000000",
+     "blockHash": "000000000000000020db34a9d8d1dcef6056a4bc22c66eab2921103b40306a0c",
+     "blockHeight": 954785,
+     "merkleProof": {
+      "index": 519,
+      "nodes": [
+       "9d7a7135e42c167319ec94c6009ee7f4164dd52081b3a09e53e34654331240e0",
+       "2afc412246a37c35e0b49ecbffb0847cf5ba041a9ead25aae35f652f88a77b12",
+       "e80adb4244ea5f0823c7af54c702acc827a37abce21e4c942fcfe6055923ed32",
+       "211ab6a4312bb367bf6a96aa47b7e63fef4ebf81c12f5b361e772d0b9fd99d68",
+       "8ffe203bb75f780b6d14bb84d781cba39ff44195f5c4e7f54dbd8a47affd139c",
+       "ac37eb70c092ad5f19137e19d46c6c1051cfca3922300e45239077ef56ffe567",
+       "c97a945451e4fb6b6413a0093804e9c9c44890cc5719673608113d15e9de0e38",
+       "4c13e8e214717726d656c27c4aedfd8eda8d5a837cd92aee33ae0174fe9562b1",
+       "c7738b8587722ed00599ca5cebcc49697ae7458fa10e74f56ba5e00ca493fd1e",
+       "54c39b5b5a4907a5217a5613b69ed32648f6ca0700abbdb0303f2b89b09842e4",
+       "e9a894cc49a73ea314245a60fa72aa889a7b8a5d802043d0bf780963051fe29e"
+      ]
+     },
+     "format": "TSC"
+    }
+   }
+  }
+ ]
+}

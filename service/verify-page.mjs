@@ -10,6 +10,10 @@ import { derive } from "../packages/proof-of-process/src/profile.mjs";
  *
  * Every claim on the page is either recomputed here or explicitly marked as
  * not-checked. Nothing is asserted on the creator's say-so.
+ *
+ * In particular, the anchor: a certificate's own network, block and time are
+ * fields its holder can edit, so they are never printed as findings. Block
+ * facts come from the chain check's result or do not appear at all.
  */
 
 const esc = (s) =>
@@ -30,7 +34,12 @@ export function renderVerifyPage({ id, report, header, certificate, publishedAt,
   if (notFound) return page("Not found", `<div class="card bad"><h1>No record here</h1>
     <p class="sub">Nothing has been published under <code>${esc(id)}</code>. Check the link, or ask whoever shared it to publish the record.</p></div>`);
 
-  const ok = report.ok;
+  // Three states, not two. "Nothing failed" is not "verified": a required check
+  // that could not run leaves the record incomplete, and the headline says so.
+  const verdict = report.verdict;
+  const ok = verdict === "verified";
+  const tone = ok ? "good" : verdict === "incomplete" ? "warn" : "bad";
+  const headline = ok ? "Verified" : verdict === "incomplete" ? "Incomplete — not verified" : "Not verified";
   const ev = report.evidence ?? {};
   const p = report.profile;
   const d = p ? derive(p) : null;
@@ -52,7 +61,13 @@ export function renderVerifyPage({ id, report, header, certificate, publishedAt,
         .join("")}</ul></div>`
     : "";
 
-  const explorer = anchor.txid ? `https://whatsonchain.com/tx/${esc(anchor.txid)}` : null;
+  const incompleteBlock = verdict === "incomplete" && report.incomplete?.length
+    ? `<div class="card warn"><h2>What could not be checked</h2><ul class="plain">${report.incomplete
+        .map((r) => `<li>${esc(r)}</li>`)
+        .join("")}</ul><p class="sub">Nothing here failed. Until these checks can run, this record is not verified.</p></div>`
+    : "";
+
+  const anchorBlock = renderAnchor(anchor);
 
   const profileBlock = p
     ? `<div class="card">
@@ -77,15 +92,16 @@ export function renderVerifyPage({ id, report, header, certificate, publishedAt,
     : "";
 
   return page(
-    ok ? "Verified" : "Not verified",
+    headline,
     `
-    <div class="verdict ${ok ? "good" : "bad"}">
-      <div class="big">${ok ? "Verified" : "Not verified"}</div>
+    <div class="verdict ${tone}">
+      <div class="big">${headline}</div>
       <div class="lvl">${esc(ev.name ?? "")}</div>
       <p class="sub">${esc(ev.summary ?? "")}</p>
     </div>
 
     ${reasons}
+    ${incompleteBlock}
 
     <div class="card">
       <h2>What was checked</h2>
@@ -96,27 +112,23 @@ export function renderVerifyPage({ id, report, header, certificate, publishedAt,
 
     <div class="card">
       <h2>Anchor</h2>
-      ${
-        anchor.present && anchor.txid
-          ? `<dl>
-              <dt>Network</dt><dd>${esc(anchor.network)}</dd>
-              <dt>Block</dt><dd>${anchor.blockHeight ? esc(anchor.blockHeight) : "awaiting confirmation"}</dd>
-              <dt>Timestamped</dt><dd>${anchor.blockTime ? esc(new Date(anchor.blockTime * 1000).toUTCString()) : "—"}</dd>
-              <dt>Transaction</dt><dd><a href="${explorer}" rel="noopener noreferrer">${esc(anchor.txid)}</a></dd>
-            </dl>
-            <p class="sub">Anyone can confirm this independently against Bitcoin block headers — no trust in ProofOfProcess required.</p>`
-          : `<p class="sub">This record has not been anchored to a public chain.</p>`
-      }
+      ${anchorBlock}
     </div>
 
-    <div class="card">
+    ${
+      ok
+        ? `<div class="card">
       <h2>What this does and does not establish</h2>
       <div class="two">
         <div>
           <h3 class="yes">Established</h3>
           <ul class="plain">
-            <li>A record with exactly this content existed at the block time above.</li>
-            <li>It has not been altered since.</li>
+            ${
+              anchor.state === "confirmed"
+                ? "<li>A commitment to exactly this record is included in the block above. The record existed by the time that block was mined; a block's own time is approximate.</li>"
+                : "<li>The record is internally consistent and signed. It carries no public timestamp.</li>"
+            }
+            <li>It has not been altered since it was signed.</li>
             <li>The figures above are bound into the signature.</li>
           </ul>
         </div>
@@ -132,7 +144,9 @@ export function renderVerifyPage({ id, report, header, certificate, publishedAt,
           </ul>
         </div>
       </div>
-    </div>
+    </div>`
+        : ""
+    }
 
     <div class="meta">
       <div><span>Record</span><code>${esc(id)}</code></div>
@@ -143,6 +157,34 @@ export function renderVerifyPage({ id, report, header, certificate, publishedAt,
     </div>
     `
   );
+}
+
+/**
+ * The anchor card. Only a confirmed anchor shows a block or a time, and those
+ * come from the chain check. A claimed-but-unconfirmed anchor shows its
+ * transaction id, labelled as the record's own claim. A failed one shows nothing
+ * from the certificate: a date printed beside a refusal is still a date.
+ */
+function renderAnchor(anchor) {
+  if (anchor.state === "confirmed") {
+    const explorer = `https://whatsonchain.com/tx/${esc(anchor.txid)}`;
+    return `<dl>
+        <dt>Network</dt><dd>${esc(anchor.network ?? "—")}</dd>
+        <dt>Block</dt><dd>${esc(anchor.blockHeight ?? "—")}</dd>
+        <dt>Block time</dt><dd>${anchor.blockTime ? esc(new Date(anchor.blockTime * 1000).toUTCString()) : "—"}</dd>
+        <dt>Transaction</dt><dd><a href="${explorer}" rel="noopener noreferrer">${esc(anchor.txid)}</a></dd>
+      </dl>
+      <p class="sub">Checked here against block headers from two independent sources. Anyone can repeat the check — no trust in ProofOfProcess required.</p>`;
+  }
+  if (anchor.state === "unconfirmed") {
+    const txid = anchor.claimed?.txid;
+    return `<p class="sub">This record names an anchoring transaction, but it could not be confirmed in a block. It may not be mined yet, or the chain could not be consulted. No block or time is shown until it is confirmed.</p>
+      ${txid ? `<dl><dt>Claimed transaction</dt><dd>${esc(txid)} <span class="note">not verified</span></dd></dl>` : ""}`;
+  }
+  if (anchor.state === "failed") {
+    return `<p class="sub">This record claims an anchor that did not verify against the chain. Its claimed block and time are not shown.</p>`;
+  }
+  return `<p class="sub">This record has not been anchored to a public chain.</p>`;
 }
 
 function stat(label, value, sub) {
@@ -172,12 +214,14 @@ function page(title, body) {
   .verdict{border:1px solid var(--line);border-radius:18px;padding:1.6rem 1.7rem;margin-bottom:1.1rem;background:var(--panel)}
   .verdict.good{border-color:rgba(126,240,191,.4);background:rgba(126,240,191,.08)}
   .verdict.bad{border-color:rgba(255,143,143,.4);background:rgba(255,143,143,.08)}
+  .verdict.warn{border-color:rgba(255,212,121,.4);background:rgba(255,212,121,.08)}
   .big{font-size:clamp(1.9rem,5vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.1}
-  .verdict.good .big{color:var(--green)} .verdict.bad .big{color:var(--red)}
+  .verdict.good .big{color:var(--green)} .verdict.bad .big{color:var(--red)} .verdict.warn .big{color:var(--amber)}
   .lvl{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.5rem}
   .sub{color:var(--muted);margin:.6rem 0 0;font-size:.95rem}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:1.3rem 1.5rem;margin-bottom:1.1rem}
   .card.bad{border-color:rgba(255,143,143,.35);background:rgba(255,143,143,.07)}
+  .card.warn{border-color:rgba(255,212,121,.35);background:rgba(255,212,121,.07)}
   h1{font-size:1.6rem;margin:0 0 .4rem;letter-spacing:-.02em}
   h2{font-size:1.02rem;margin:0 0 .9rem;letter-spacing:-.01em}
   h3{font-size:.72rem;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;margin:0 0 .6rem}

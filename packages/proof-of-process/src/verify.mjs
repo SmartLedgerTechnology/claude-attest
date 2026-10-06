@@ -1,7 +1,7 @@
 import { canonicalJSON, hashLeaf, sha256Hex } from "./canonical.mjs";
 import { merkleRoot } from "./merkle.mjs";
 import { derive } from "./profile.mjs";
-import { evidenceLevel } from "./evidence.mjs";
+import { evidenceLevel, anchorClaimed } from "./evidence.mjs";
 import { verifyCountersignature, isIndependentOf } from "./countersign.mjs";
 
 export const CHECKPOINT_FORMAT = "proof-of-process.checkpoint.v1";
@@ -25,8 +25,20 @@ const SUPPORTED_ALGORITHMS = new Set(["ML-DSA-65", "ML-DSA-87", "ECDSA-secp256k1
  *                     parentUuid path, so no turn happened un-attested
  *
  * Checks 5 and 7 (on-chain confirmation) need optional peer deps. When those
- * are absent the check is reported as `null` (skipped) rather than false — a
- * missing library is not evidence of forgery.
+ * are absent the check is reported as `null` (could not run) rather than false
+ * — a missing library is not evidence of forgery.
+ *
+ * The verdict has three states, because "nothing failed" is not "everything
+ * was checked":
+ *
+ *   verified    every required check ran and passed
+ *   failed      at least one check ran and did not pass
+ *   incomplete  nothing failed, but a required check could not run
+ *
+ * A check that could not run can never add up to a pass. Which checks are
+ * required is decided here, from what the record claims — never from a field
+ * the holder of the file can edit to make a check go away. `ok` is true only
+ * for `verified`.
  */
 export async function verifyAttestation(attestation, opts = {}) {
   const reasons = [];
@@ -140,33 +152,50 @@ export async function verifyAttestation(attestation, opts = {}) {
   }
 
   // 7. On-chain confirmation, delegated to the NotaryHash SDK when present.
-  let anchorSummary = { present: false };
-  if (certificate?.anchor) {
+  //
+  // Nothing in `certificate.anchor` is covered by the creator's signature, so
+  // it is carried as `claimed` and is never reported as fact. The verified
+  // fields below are filled only from the chain check's own result.
+  const incomplete = [];
+  if (checks.signature === null && certificate) incomplete.push("signature could not be checked");
+
+  let anchorSummary = { present: false, state: "none" };
+  if (certificate?.anchor || certificate?.spv) {
+    const a = certificate.anchor ?? {};
+    const claimed = anchorClaimed(certificate);
     anchorSummary = {
       present: true,
-      network: certificate.anchor.network,
-      txid: certificate.anchor.txid,
-      blockHeight: certificate.anchor.blockHeight,
-      blockTime: certificate.anchor.blockTime,
-      type: certificate.anchor.type,
+      // none: no anchor is claimed (the free tier). unconfirmed: one is claimed
+      // and could not be confirmed. confirmed / failed: the chain check ran.
+      state: claimed ? "unconfirmed" : "none",
+      txid: null,
+      blockHeight: null,
+      blockTime: null,
+      network: null,
+      claimed: { network: a.network, txid: a.txid, blockHeight: a.blockHeight, blockTime: a.blockTime, type: a.type },
     };
-    // Only consult a chain when one was actually used. An unanchored or mock
-    // attestation has no on-chain claim to disprove, and reporting that as a
-    // FAILED check tells a free-tier user their sound, tamper-evident record is
-    // broken when it is not.
-    // Three distinct states, and only the third can be checked against a chain:
-    // no anchor (mock), broadcast but not yet mined, and confirmed. An
-    // unconfirmed transaction has no block to prove inclusion in, so checking
-    // it can only ever "fail" — which would misreport a healthy, seconds-old
-    // anchor as a broken one.
-    const anchoredOnChain =
-      certificate.anchor.network !== "mock" &&
-      !!certificate.anchor.txid &&
-      certificate.anchor.blockHeight != null;
-    if (opts.checkChain && anchoredOnChain) {
-      const chain = await verifyOnChain(certificate, opts);
-      checks.onChain = chain.ok;
-      if (chain.ok === false) reasons.push(chain.reason ?? "on-chain anchor did not verify");
+    // Any claimed anchor must be confirmed, whatever the certificate calls its
+    // network. Only a record that claims nothing has nothing to disprove — that
+    // is the free tier, and it is reported as locally verified, not as broken.
+    if (claimed) {
+      const chain = opts.checkChain
+        ? await (opts.verifyChain ?? verifyOnChain)(certificate, opts)
+        : { ok: null, reason: "the chain check was not requested" };
+      checks.onChain = chain.ok === true ? true : chain.ok === false ? false : null;
+      if (checks.onChain === true) {
+        anchorSummary.state = "confirmed";
+        // The chain check ties these two to the proof: the raw transaction must
+        // hash to this txid, and the network must be the one verified against.
+        anchorSummary.txid = a.txid;
+        anchorSummary.network = a.network;
+        anchorSummary.blockHeight = chain.blockHeight ?? null;
+        anchorSummary.blockTime = chain.blockTime ?? null;
+      } else if (checks.onChain === false) {
+        anchorSummary.state = "failed";
+        reasons.push(chain.reason || "on-chain anchor did not verify");
+      } else {
+        incomplete.push(`anchor not confirmed: ${chain.reason || "the chain could not be consulted"}`);
+      }
     }
   }
 
@@ -197,9 +226,16 @@ export async function verifyAttestation(attestation, opts = {}) {
     verifiedCounters.push(c);
   }
 
+  // Fail closed twice over: a false check fails the record even if it filed no
+  // reason, and a reason fails it even if no check is marked false.
+  const failed = reasons.length > 0 || Object.values(checks).includes(false);
+  const verdict = failed ? "failed" : incomplete.length > 0 ? "incomplete" : "verified";
+
   return {
-    ok: reasons.length === 0,
+    ok: verdict === "verified",
+    verdict,
     reasons,
+    incomplete,
     checks,
     evidence: evidenceLevel(attestation, checks, verifiedCounters),
     anchor: anchorSummary,
@@ -245,19 +281,46 @@ async function verifySignature(certificate) {
   }
 }
 
-async function verifyOnChain(certificate, opts) {
+/**
+ * Confirm the certificate's anchor against block headers.
+ *
+ * Returns ok true / false / null. null means "could not tell" — a header source
+ * down or throttled, sources not agreeing, no proof in the certificate yet — and
+ * must never be read as a pass or as a failure. The SDK's own `ok` is false for
+ * both invalid and indeterminate, so the three states are built from its parts.
+ *
+ * blockHeight and blockTime are the SDK's, read from the block header, and are
+ * the only block facts a caller may present as verified.
+ */
+export async function verifyOnChain(certificate, opts = {}) {
   try {
     const sdk = await import("@smartledger/notaryhash");
+    if (!sdk.DEFAULT_HEADER_POLICY || !sdk.BitailsHeaderProvider) {
+      return { ok: null, reason: "@smartledger/notaryhash 2.1.4 or later is needed to check the on-chain anchor" };
+    }
+    // Two independent header sources that must agree: with one, the verifier
+    // believes whatever that one source says.
     const headers =
       opts.headerProvider ??
-      new sdk.MultiSourceHeaderProvider([new sdk.WocHeaderProvider("https://api.whatsonchain.com/v1/bsv/main")]);
-    const verdict = await sdk.verifyCertificateStandalone(certificate, headers);
-    return { ok: verdict.ok, reason: verdict.ok ? undefined : (verdict.reasons ?? []).join("; ") };
+      new sdk.MultiSourceHeaderProvider([
+        new sdk.WocHeaderProvider("https://api.whatsonchain.com/v1/bsv/main"),
+        new sdk.BitailsHeaderProvider("https://api.bitails.io"),
+      ]);
+    const v = await sdk.verifyCertificateStandalone(certificate, headers, opts.headerPolicy ?? sdk.DEFAULT_HEADER_POLICY);
+    const reason = (v.reasons ?? []).join("; ");
+    if (v.signatureValid === false || v.proofHashValid === false || v.anchorStatus === "invalid") {
+      return { ok: false, reason: reason || "the certificate did not verify" };
+    }
+    if (v.anchorStatus === "valid") {
+      if (v.ok !== true) return { ok: false, reason: reason || "the certificate did not verify" };
+      return { ok: true, blockHeight: v.blockHeight ?? null, blockTime: v.blockTime ?? null };
+    }
+    return { ok: null, reason: reason || "the anchor could not be confirmed" };
   } catch (e) {
     if (e?.code === "ERR_MODULE_NOT_FOUND") {
       return { ok: null, reason: "install @smartledger/notaryhash to check the on-chain anchor" };
     }
-    return { ok: false, reason: `on-chain check threw: ${e?.message ?? e}` };
+    return { ok: null, reason: `on-chain check could not run: ${e?.message ?? e}` };
   }
 }
 

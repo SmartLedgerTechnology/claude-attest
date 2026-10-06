@@ -18,7 +18,7 @@
   "peerDependencies": {
     "@noble/curves": "^1.4.0",
     "@noble/post-quantum": "^0.2.0",
-    "@smartledger/notaryhash": "^1.0.0"
+    "@smartledger/notaryhash": "^2.1.4"
   },
   "peerDependenciesMeta": {
     "@noble/curves": { "optional": true },

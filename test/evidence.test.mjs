@@ -13,6 +13,10 @@ const allPass = {
   onChain: true,
 };
 
+// What the chain check concluded is carried by `checks.onChain`. The anchor
+// fields inside a certificate are its holder's claim and decide nothing.
+const unchecked = { ...allPass, onChain: null };
+
 const confirmed = { certificate: { anchor: { txid: "abc", blockHeight: 962047 } } };
 const mempool = { certificate: { anchor: { txid: "abc", blockHeight: null } } };
 
@@ -25,7 +29,7 @@ test("a sound, confirmed, self-signed attestation is level 1", () => {
 });
 
 test("an unmined anchor is not yet an independent timestamp", () => {
-  const e = evidenceLevel(mempool, allPass, []);
+  const e = evidenceLevel(mempool, unchecked, []);
   assert.equal(e.level, 0);
   assert.equal(e.criteria.timestamped, false);
   assert.match(e.blockedBy, /has not been mined/);
@@ -79,7 +83,7 @@ test("countersignatures cannot rescue a broken record", () => {
 
 test("a sound but unanchored record reads as locally verified, not broken", () => {
   const unanchored = { certificate: { anchor: { txid: null, network: "mock", blockHeight: null } } };
-  const e = evidenceLevel(unanchored, allPass, []);
+  const e = evidenceLevel(unanchored, unchecked, []);
   assert.equal(e.level, 0);
   assert.equal(e.name, "Locally Verified", "the free tier is not a failure state");
   assert.match(e.summary, /tamper-evident/);
@@ -96,7 +100,7 @@ test("genuinely broken integrity still reads as unverified", () => {
 
 test("a broadcast-but-unmined anchor reads as pending, not unanchored", () => {
   const pending = { certificate: { anchor: { txid: "abc123", network: "bsv-mainnet", blockHeight: null } } };
-  const e = evidenceLevel(pending, allPass, []);
+  const e = evidenceLevel(pending, unchecked, []);
   assert.equal(e.level, 0);
   assert.equal(e.name, "Anchor Pending", "broadcast is not the same as absent");
   assert.match(e.nextLevelRequires, /mined/);
@@ -105,7 +109,30 @@ test("a broadcast-but-unmined anchor reads as pending, not unanchored", () => {
 
 test("no anchor at all is distinct from a pending one", () => {
   const none = { certificate: { anchor: { txid: null, network: "mock", blockHeight: null } } };
-  const e = evidenceLevel(none, allPass, []);
+  const e = evidenceLevel(none, unchecked, []);
   assert.equal(e.name, "Locally Verified");
   assert.match(e.blockedBy, /no anchor has been submitted/);
+});
+
+test("a block height written into the certificate is not a timestamp", () => {
+  // The chain check did not run. The certificate saying it is in a block
+  // cannot, on its own, reach level 1 — with or without countersignatures.
+  const e = evidenceLevel(confirmed, unchecked, [{ role: COUNTERSIGNATURE_ROLES.WITNESS, keyId: "w" }]);
+  assert.equal(e.level, 0);
+  assert.equal(e.criteria.timestamped, false);
+  assert.equal(e.name, "Anchor Pending");
+});
+
+test("an anchor that was checked and failed reads as unverified, not pending", () => {
+  const e = evidenceLevel(confirmed, { ...allPass, onChain: false }, [
+    { role: COUNTERSIGNATURE_ROLES.WITNESS, keyId: "w" },
+  ]);
+  assert.equal(e.level, 0);
+  assert.equal(e.name, "Unverified");
+});
+
+test("the network label does not decide whether an anchor is claimed", () => {
+  const relabelled = { certificate: { anchor: { txid: "abc", network: "mock", blockHeight: 620000 } } };
+  const e = evidenceLevel(relabelled, unchecked, []);
+  assert.equal(e.name, "Anchor Pending", "calling a claimed anchor mock does not make it the free tier");
 });

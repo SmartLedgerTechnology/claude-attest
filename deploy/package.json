@@ -6,7 +6,7 @@
   "dependencies": {
     "@noble/post-quantum": "^0.2.0",
     "redis": "^4.7.0",
-    "@smartledger/notaryhash": "^1.0.0",
+    "@smartledger/notaryhash": "^2.1.4",
     "nodemailer": "^9.0.5"
   }
 }

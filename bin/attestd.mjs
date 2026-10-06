@@ -214,14 +214,15 @@ async function doRefresh(target) {
   fs.writeFileSync(file, JSON.stringify(attestation, null, 2));
 
   const a = result.certificate.anchor ?? {};
-  console.log(result.confirmed ? "confirmed" : "still unconfirmed");
+  // What the service reports. `verify` is what checks it against the chain.
+  console.log(result.confirmed ? "the service reports: confirmed" : "the service reports: still unconfirmed");
   console.log(`  txid          ${a.txid}`);
   console.log(`  block height  ${a.blockHeight ?? "(pending)"}`);
   if (a.blockTime) console.log(`  block time    ${new Date(a.blockTime * 1000).toISOString()}`);
   console.log(`  spv envelope  ${result.certificate.spv ? "present" : "absent"}`);
   if (before === null && a.blockHeight != null) {
-    console.log("\nThe local certificate now carries a full SPV envelope and can be");
-    console.log("verified against Bitcoin block headers with no trust in the service.");
+    console.log("\nThe local certificate now carries a full SPV envelope. Run `verify` to");
+    console.log("check it against Bitcoin block headers with no trust in the service.");
   }
 }
 
@@ -276,21 +277,27 @@ async function doVerify(target, argv = []) {
   // An attestation verified soon after anchoring still holds a mempool-era
   // certificate. Top it up first, so `onChain` has something to check —
   // unless the caller is deliberately verifying the bytes as they stand.
-  const anchored = attestation.certificate?.anchor?.txid;
-  const unconfirmed = anchored && attestation.certificate?.anchor?.blockHeight == null;
-  if (unconfirmed && !argv.includes("--no-refresh")) {
+  let report = await verifyAttestation(attestation, { strict: false, checkChain: true });
+  if (report.anchor?.state === "unconfirmed" && !argv.includes("--no-refresh")) {
     const r = await refreshCertificate(attestation, loadConfig());
-    if (r.ok && r.confirmed) {
-      attestation.certificate = r.certificate;
-      attestation.anchorStatus = "confirmed";
-      fs.writeFileSync(file, JSON.stringify(attestation, null, 2));
-      console.log("(refreshed: anchor has since confirmed)\n");
+    if (r.ok) {
+      // The fetched certificate is untrusted until it verifies. Only then does
+      // it replace the one on disk.
+      const candidate = { ...attestation, certificate: r.certificate, anchorStatus: "confirmed" };
+      const again = await verifyAttestation(candidate, { strict: false, checkChain: true });
+      if (again.checks.onChain === true) {
+        attestation = candidate;
+        report = again;
+        fs.writeFileSync(file, JSON.stringify(attestation, null, 2));
+        console.log("(refreshed: anchor has since confirmed)\n");
+      }
     }
   }
 
-  const report = await verifyAttestation(attestation, { strict: false, checkChain: true });
-
-  console.log(report.ok ? "VERIFIED" : "NOT VERIFIED");
+  // Three outcomes and three exit codes: 0 verified, 1 a check failed, 3 a
+  // required check could not run. Incomplete is not a pass.
+  const headline = { verified: "VERIFIED", incomplete: "INCOMPLETE — not verified", failed: "NOT VERIFIED" }[report.verdict];
+  console.log(headline);
   if (report.evidence) {
     const e = report.evidence;
     console.log(`Evidence level ${e.level} — ${e.name}`);
@@ -300,6 +307,10 @@ async function doVerify(target, argv = []) {
   for (const [name, value] of Object.entries(report.checks)) {
     const mark = value === true ? "pass" : value === false ? "FAIL" : "skip";
     console.log(`  ${mark.padEnd(5)} ${name}`);
+  }
+  if (report.incomplete.length) {
+    console.log("\ncould not be checked");
+    for (const r of report.incomplete) console.log(`  - ${r}`);
   }
   if (report.reasons.length) {
     console.log("\nreasons");
@@ -325,11 +336,20 @@ async function doVerify(target, argv = []) {
     }
   }
 
-  if (report.anchor?.present) {
-    console.log("\nanchor");
-    console.log(`  network  ${report.anchor.network}`);
-    console.log(`  txid     ${report.anchor.txid ?? "(not yet broadcast)"}`);
-    console.log(`  height   ${report.anchor.blockHeight ?? "(unconfirmed)"}`);
+  // Block facts are printed only when the chain check produced them. What the
+  // certificate says about itself is labelled as a claim.
+  const a = report.anchor;
+  if (a?.state === "confirmed") {
+    console.log("\nanchor (confirmed against block headers)");
+    console.log(`  network  ${a.network}`);
+    console.log(`  txid     ${a.txid}`);
+    console.log(`  height   ${a.blockHeight}`);
+    if (a.blockTime) console.log(`  time     ${new Date(a.blockTime * 1000).toISOString()}`);
+  } else if (a?.state === "unconfirmed") {
+    console.log("\nanchor (claimed by the certificate, NOT verified)");
+    console.log(`  txid     ${a.claimed.txid ?? "(none)"}`);
+  } else if (a?.state === "failed") {
+    console.log("\nanchor: the claimed anchor did not verify");
   }
 
   const e = report.evidence;
@@ -338,7 +358,7 @@ async function doVerify(target, argv = []) {
   }
   if (e?.caveat) console.log(`\n${e.caveat}`);
 
-  process.exit(report.ok ? 0 : 1);
+  process.exit({ verified: 0, failed: 1, incomplete: 3 }[report.verdict]);
 }
 
 function pct(x) {

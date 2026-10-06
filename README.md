@@ -95,6 +95,14 @@ export CLAUDE_ATTEST_ANCHOR=notaryhash
 
 The same operations are available as a CLI (`claude-attest init|status|list|verify|finalize|sweep`).
 
+`verify` has three outcomes, because "nothing failed" is not "everything was
+checked": **VERIFIED** (exit 0), **NOT VERIFIED** (a check failed, exit 1) and
+**INCOMPLETE — not verified** (a required check could not run, exit 3 — for
+example an anchor that is not mined yet, or a header source that did not
+answer). A block or a time is reported only when the anchor was confirmed
+against block headers from two independent sources; what a certificate says
+about its own anchor is shown as a claim.
+
 ## How it works
 
 **Capture (hot path).** Every hook event appends one leaf to

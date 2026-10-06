@@ -29,7 +29,7 @@ export const EVIDENCE_LEVELS = {
   },
   "0-pending": {
     name: "Anchor Pending",
-    summary: "Anchored and broadcast; awaiting confirmation in a block.",
+    summary: "An anchoring transaction is claimed, but it has not been confirmed in a block.",
   },
   1: {
     name: "Self Attested",
@@ -47,6 +47,19 @@ export const EVIDENCE_LEVELS = {
 
 /** Roles a countersignature can be presented under. */
 export const COUNTERSIGNATURE_ROLES = { PLATFORM: "platform", WITNESS: "witness" };
+
+/**
+ * Does this certificate CLAIM a public anchor?
+ *
+ * Everything in `certificate.anchor` is outside the creator's signature, so it
+ * is only ever a claim. This answers "is there a claim that must be checked
+ * against the chain", and deliberately ignores the `network` label: a label
+ * the holder can edit must not be able to switch a check off.
+ */
+export function anchorClaimed(certificate) {
+  const a = certificate?.anchor;
+  return certificate?.spv != null || (!!a && (!!a.txid || a.blockHeight != null || a.blockTime != null));
+}
 
 /**
  * Determine the evidence level from verified checks plus any countersignatures.
@@ -68,13 +81,22 @@ export function evidenceLevel(attestation, checks, verifiedCountersignatures = [
   // A false transcript check is disqualifying; null (not applicable) is not.
   const structureIntact = integrity && checks.transcriptChain !== false;
   const signed = checks.signature === true && checks.anchorBinding === true;
-  const timestamped = attestation.certificate?.anchor?.blockHeight != null;
-  // Broadcast but unmined is a real, meaningful intermediate state: the digest
-  // is public and irreversible, it simply has no block height yet.
-  const broadcast = !!attestation.certificate?.anchor?.txid;
+  // A timestamp is something the chain check established, never something the
+  // certificate says about itself: a block height typed into the file is not
+  // evidence of a block.
+  const timestamped = checks.onChain === true;
+  // Claimed but unconfirmed is a real intermediate state: a transaction is
+  // named, and no block we could verify contains it yet.
+  const broadcast = anchorClaimed(attestation.certificate);
 
-  if (!structureIntact || !signed) {
-    return report(0, { integrity: structureIntact, signed, timestamped, broadcast }, verifiedCountersignatures);
+  // An anchor that was checked and did not verify is a failure, not a pending
+  // timestamp, and no countersignature can lift a record above it.
+  if (!structureIntact || !signed || checks.onChain === false) {
+    return report(
+      0,
+      { integrity: structureIntact && checks.onChain !== false, signed, timestamped, broadcast },
+      verifiedCountersignatures
+    );
   }
 
   // An anchor still in the mempool is a pending timestamp, not an independent
@@ -84,7 +106,9 @@ export function evidenceLevel(attestation, checks, verifiedCountersignatures = [
       0,
       { integrity: true, signed: true, timestamped: false, broadcast },
       verifiedCountersignatures,
-      broadcast ? "the anchoring transaction has not been mined yet" : "no anchor has been submitted"
+      broadcast
+        ? "the anchoring transaction has not been mined yet, or the chain could not be consulted"
+        : "no anchor has been submitted"
     );
   }
 
@@ -108,7 +132,7 @@ function report(level, criteria, countersignatures, blockedBy) {
   const next = {
     0: soundButUnanchored
       ? criteria.broadcast
-        ? "the anchoring transaction to be mined (usually minutes)"
+        ? "the anchoring transaction to be mined and confirmed against block headers (usually minutes)"
         : "anchoring this attestation to a public chain"
       : "pass the integrity, signature and timestamp checks",
     1: "a countersignature from the capture platform (role: platform)",

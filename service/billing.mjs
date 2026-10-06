@@ -21,8 +21,7 @@ import { fileURLToPath } from "node:url";
 import { KeyStore } from "./keystore.mjs";
 import { verifyStripeSignature } from "./stripe-signature.mjs";
 import { handleEvent, HANDLED_EVENTS } from "./billing-events.mjs";
-import { verifyAttestation } from "../packages/proof-of-process/src/verify.mjs";
-import { canonicalJSON, sha256Hex } from "../packages/proof-of-process/src/canonical.mjs";
+import { makePublishedStore } from "./published.mjs";
 import { renderVerifyPage } from "./verify-page.mjs";
 import { reconcile } from "./reconcile.mjs";
 import { Notifier, events } from "./notify.mjs";
@@ -78,9 +77,8 @@ if (MODE === "test" && !SECRET_KEY.includes("_test_")) fatal("STRIPE_MODE=test b
 
 const redis = await connectRedis();
 const store = new KeyStore(redis);
-// In-memory fallbacks so the service is exercisable without Redis.
-const published = new Map();
-const publishedAlias = new Map();
+// Falls back to memory without Redis, so the service is exercisable alone.
+const publishedStore = makePublishedStore({ redis, notaryhashUrl: process.env.NOTARYHASH_URL ?? "https://notaryhash.com" });
 const seen = makeSeenSet();
 const notifier = new Notifier({
   token: process.env.TELEGRAM_BOT_TOKEN,
@@ -234,37 +232,14 @@ async function publish(req, res) {
   const auth = await authorizePublisher(body?.apiKey ?? "");
   if (!auth.ok) return json(res, 401, { error: auth.reason ?? "unknown or expired API key" });
 
-  const { header, certificate, countersignatures } = body?.attestation ?? {};
-  if (!header || !certificate) return json(res, 400, { error: "attestation must include a header and a certificate" });
-
-  // The record is named by the digest that was anchored. Anyone holding the
-  // attestation can derive the same id, and a mismatch here means the header
-  // and the certificate do not belong together.
-  const digest = sha256Hex(canonicalJSON(header));
-  if (digest !== certificate.payloadHash) {
-    return json(res, 400, { error: "header does not match the certificate's payloadHash" });
-  }
-
-  const record = {
-    id: digest,
-    header,
-    certificate,
-    countersignatures: Array.isArray(countersignatures) ? countersignatures : [],
-    customerId: auth.customerId ?? null,
-    publishedVia: auth.via,
-    publishedAt: new Date().toISOString(),
-  };
-  const payload = JSON.stringify(record);
-  if (redis) {
-    await redis.set(`pop:published:${digest}`, payload);
-    if (body?.notaryHashId) await redis.set(`pop:published-alias:${body.notaryHashId}`, digest);
-  } else {
-    published.set(digest, payload);
-    if (body?.notaryHashId) publishedAlias.set(body.notaryHashId, digest);
-  }
+  // `body.notaryHashId` is ignored: a value the caller chooses must not name a
+  // key in our store. The alias is derived from the certificate (published.mjs).
+  const r = await publishedStore.publish(body?.attestation ?? {}, auth);
+  if (!r.ok) return json(res, r.status, { error: r.error, reasons: r.reasons });
+  const digest = r.id;
   verifyCache.delete(digest);
   notifier.send("published", events.published({ url: `${PUBLIC_BASE}/v/${digest}` }));
-  return json(res, 200, { id: digest, url: `${PUBLIC_BASE}/v/${digest}` });
+  return json(res, 200, { id: digest, url: `${PUBLIC_BASE}/v/${digest}`, verdict: r.verdict });
 }
 
 /** Operational keys first, then subscriptions. Constant-time on the env path. */
@@ -287,15 +262,6 @@ async function reconcileNow(req, res) {
   if (!auth.ok || auth.via !== "operator") return json(res, 401, { error: "operator key required" });
   const summary = await reconcile({ store, stripe, tierForPrice, log: (m) => console.error(m) });
   return json(res, 200, summary);
-}
-
-async function loadPublished(id) {
-  const direct = redis ? await redis.get(`pop:published:${id}`) : published.get(id);
-  if (direct) return JSON.parse(direct);
-  const aliased = redis ? await redis.get(`pop:published-alias:${id}`) : publishedAlias.get(id);
-  if (!aliased) return null;
-  const rec = redis ? await redis.get(`pop:published:${aliased}`) : published.get(aliased);
-  return rec ? JSON.parse(rec) : null;
 }
 
 /**
@@ -337,19 +303,15 @@ async function verifyPage(id, res) {
   const hit = cachedPage(key);
   if (hit) return send(hit.status, hit.html);
 
-  const rec = await loadPublished(key);
-  if (!rec) {
+  // Verified here, on every request, from the stored bytes — never trusting a
+  // verdict cached at publish time.
+  const found = await publishedStore.view(key);
+  if (!found) {
     const body = renderVerifyPage({ id, notFound: true });
     cachePage(key, 404, body);
     return send(404, body);
   }
-
-  // Verified here, on every request, from the stored bytes — never trusting a
-  // verdict cached at publish time.
-  const report = await verifyAttestation(
-    { header: rec.header, certificate: rec.certificate, countersignatures: rec.countersignatures },
-    { checkChain: true }
-  );
+  const { record: rec, report } = found;
   const body = renderVerifyPage({ id: rec.id, report, header: rec.header, certificate: rec.certificate, publishedAt: rec.publishedAt });
   cachePage(key, 200, body);
   return send(200, body);

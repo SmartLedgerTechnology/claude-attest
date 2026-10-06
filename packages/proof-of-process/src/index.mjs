@@ -37,6 +37,7 @@ export {
   EVIDENCE_LEVELS,
   COUNTERSIGNATURE_ROLES,
   evidenceLevel,
+  anchorClaimed,
 } from "./evidence.mjs";
 export {
   ASSERTION_LABEL,
