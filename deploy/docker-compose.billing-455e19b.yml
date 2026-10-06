@@ -1,0 +1,11 @@
+# Second compose file, ALWAYS used together with docker-compose.countersigner.yml (see README.deploy).
+# It pins each service to the image it actually runs:
+#  - billing: the build of commit 455e19b (deployed 2026-10-06).
+#  - countersigner: the image that matches the running container. Tag 0.1.0 was moved away from it on
+#    2026-08-25 and carries different dependencies; running-20260911 has the same countersigner.mjs and
+#    package.json as the running container (checked by sha256 on 2026-10-06).
+services:
+  billing:
+    image: proofofprocess-billing:455e19b
+  countersigner:
+    image: proofofprocess-countersigner:running-20260911

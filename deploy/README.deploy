@@ -1,0 +1,35 @@
+ProofOfProcess on this box — how to change it without breaking it
+(written 2026-10-06; source of truth is the claude-attest repo, deploy/ folder)
+
+This folder is a plain copy of the repo, not a git checkout. It was brought in line
+with commit 455e19b on 2026-10-06 (see ../DEPLOYED_COMMIT); the .env files are local only.
+
+ALWAYS use both compose files:
+
+  docker compose -f docker-compose.countersigner.yml -f docker-compose.billing-455e19b.yml \
+      up -d --no-deps --no-build billing
+
+The second file pins each service to the image it really runs. Leaving it out, or a
+plain `up -d`, puts billing back on the old tag proofofprocess-countersigner:0.1.0.
+
+NEVER run `up -d` without `--no-deps billing`: a full `up` RECREATES pop-countersigner
+(its container predates this compose definition; seen in a dry run on 2026-10-06), and
+without the second file it would come back on the wrong image.
+
+DO NOT recreate pop-countersigner unless you mean to. Its signing key lives in the
+Docker volume countersigner-keys (/data/countersigner.json); started without that
+file it generates a NEW key. The image that matches the running container is
+proofofprocess-countersigner:running-20260911 (same countersigner.mjs and package.json,
+checked by sha256), and the second compose file pins the service to it; tag 0.1.0 has
+different dependencies. Never `down`. Never `docker image prune -a` here: it would
+remove running-20260911 and the rollback tag.
+
+Images are built off this box (1 vCPU) and loaded with `docker save | docker load`.
+
+Rollback for billing: the same command with only the first -f file (tag 0.1.0, also
+kept as proofofprocess-countersigner:rollback-20261006). A copy of this folder from
+before the 2026-10-06 deploy is in /root/proofofprocess-bak-20261006.
+
+Never touch /root/notaryhash, the Caddy or Redis containers, or the Redis key
+notaryhash:utxos. This service uses only the pop: namespace in Redis.
+Tell notaryhash2026 and the droplet manager before any change; they share this box.

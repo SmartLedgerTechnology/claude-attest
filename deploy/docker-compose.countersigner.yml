@@ -4,7 +4,9 @@
 # Caddy can reach it by name, without adding a service to NotaryHash's compose
 # file. Nothing here can recreate, rebuild, or restart the notary container.
 #
-#   docker compose -f docker-compose.countersigner.yml up -d --build
+# Do NOT run a plain `up` with this file alone. It is always used together with
+# docker-compose.billing-455e19b.yml, for one service at a time, and images are
+# built off the box — the exact command and the reasons are in README.deploy.
 #
 # Deliberately no host port: the only way in is through Caddy over TLS. An API
 # key crossing plaintext HTTP would be worse than no API key.
